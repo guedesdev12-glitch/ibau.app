@@ -115,7 +115,9 @@ export default async function DashboardPage() {
             ))}
           </div>
         ) : (
-          <p className="text-sm text-neutral-400">Nenhum horário cadastrado ainda.</p>
+          <div className="rounded-xl border border-dashed border-neutral-200 px-4 py-6 text-center">
+            <p className="text-sm text-neutral-400">Nenhum horário cadastrado ainda.</p>
+          </div>
         )}
       </section>
 
@@ -157,7 +159,9 @@ export default async function DashboardPage() {
             })}
           </div>
         ) : (
-          <p className="text-sm text-neutral-400">Nenhum evento agendado no momento.</p>
+          <div className="rounded-xl border border-dashed border-neutral-200 px-4 py-6 text-center">
+            <p className="text-sm text-neutral-400">Nenhum evento agendado no momento.</p>
+          </div>
         )}
       </section>
 
@@ -199,7 +203,9 @@ export default async function DashboardPage() {
             })}
           </div>
         ) : (
-          <p className="text-sm text-neutral-400">Nenhuma célula cadastrada ainda.</p>
+          <div className="rounded-xl border border-dashed border-neutral-200 px-4 py-6 text-center">
+            <p className="text-sm text-neutral-400">Nenhuma célula cadastrada ainda.</p>
+          </div>
         )}
       </section>
 
@@ -212,10 +218,10 @@ export default async function DashboardPage() {
               <Link
                 key={href}
                 href={href}
-                className="ibau-tile flex w-20 flex-shrink-0 flex-col items-center gap-2"
+                className="ibau-tile ibau-card flex w-24 flex-shrink-0 flex-col items-center gap-2 p-4"
               >
-                <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-neutral-100 text-neutral-800">
-                  <Icon size={22} />
+                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-neutral-100 text-neutral-800">
+                  <Icon size={20} />
                 </span>
                 <span className="text-center text-[11px] font-medium leading-tight">
                   {label}
