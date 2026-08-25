@@ -1,17 +1,13 @@
 import Link from "next/link";
 import Image from "next/image";
 import { redirect } from "next/navigation";
-import { ArrowLeft, ImagePlus, Upload } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
-import { uploadBanner, deleteBanner, toggleBannerActive, moveBanner } from "@/app/actions/banners";
+import { deleteBanner, toggleBannerActive, moveBanner } from "@/app/actions/banners";
 import { BannerControls } from "@/components/banner-controls";
+import { BannerUploadForm } from "@/components/banner-upload-form";
 
-export default async function CarrosselAdminPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ error?: string; success?: string }>;
-}) {
-  const { error, success } = await searchParams;
+export default async function CarrosselAdminPage() {
   const supabase = await createClient();
 
   const { data: canManage } = await supabase.rpc("has_permission", {
@@ -36,52 +32,7 @@ export default async function CarrosselAdminPage({
         </div>
       </div>
 
-      {error && (
-        <p className="mb-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>
-      )}
-      {success && (
-        <p className="mb-4 rounded-xl bg-green-50 px-4 py-3 text-sm text-green-700">
-          Foto publicada no carrossel!
-        </p>
-      )}
-
-      <form action={uploadBanner} className="ibau-card mb-6 p-5">
-        <p className="mb-3 flex items-center gap-2 text-sm font-semibold">
-          <ImagePlus size={16} className="text-[#14532d]" /> Adicionar foto ou aviso
-        </p>
-
-        <label
-          htmlFor="banner-image"
-          className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-neutral-300 bg-neutral-50 px-4 py-8 text-center transition hover:border-[#14532d] hover:bg-[#14532d]/5"
-        >
-          <Upload size={24} className="text-neutral-400" />
-          <span className="text-sm font-medium text-neutral-600">
-            Toque para escolher uma foto
-          </span>
-          <span className="text-xs text-neutral-400">JPG ou PNG</span>
-          <input
-            id="banner-image"
-            type="file"
-            name="image"
-            accept="image/*"
-            required
-            className="sr-only"
-          />
-        </label>
-
-        <input
-          type="text"
-          name="title"
-          placeholder="Legenda / aviso (opcional)"
-          className="mt-3 w-full rounded-lg border border-neutral-200 px-3 py-2.5 text-sm"
-        />
-        <button
-          type="submit"
-          className="mt-3 w-full rounded-lg bg-[#14532d] py-2.5 text-sm font-medium text-white"
-        >
-          Publicar no carrossel
-        </button>
-      </form>
+      <BannerUploadForm />
 
       <div className="space-y-3">
         {banners?.map((b, i) => (
