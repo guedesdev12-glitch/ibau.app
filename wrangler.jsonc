@@ -19,5 +19,9 @@
       "binding": "VINEXT_KV_CACHE",
       "id": "e348d905e4ce4b59b192cf89d9a2e0b4"
     }
-  ]
+  ],
+  "vars": {
+    "NEXT_PUBLIC_SUPABASE_URL": "https://wxxxvdiikmyqaqmxrbnm.supabase.co",
+    "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY": "sb_publishable_8MSWwCQrJDlacKliA25wEQ_UaDOsdy0"
+  }
 }
