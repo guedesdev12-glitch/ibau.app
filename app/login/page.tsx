@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { login } from "@/app/actions/auth";
 
@@ -12,6 +13,14 @@ export default async function LoginPage({
     <main className="flex min-h-screen items-center justify-center px-4">
       <div className="w-full max-w-sm space-y-6">
         <div className="text-center">
+          <Image
+            src="/logo.png"
+            alt="IBAU"
+            width={96}
+            height={96}
+            className="mx-auto mb-2"
+            priority
+          />
           <h1 className="text-2xl font-semibold">IBAU App</h1>
           <p className="text-sm text-neutral-500">Entre para acessar sua conta</p>
         </div>

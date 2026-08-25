@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { CalendarDays, Users2, Shield, MapPin, Phone, AtSign } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { logout } from "@/app/actions/auth";
@@ -59,9 +60,12 @@ export default async function DashboardPage() {
   return (
     <main className="mx-auto max-w-3xl px-4 pb-24 pt-8">
       <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold">Olá, {firstName} 👋</h1>
-          <p className="text-sm text-neutral-500">{roleName ?? "Membro"}</p>
+        <div className="flex items-center gap-3">
+          <Image src="/logo-mark.png" alt="IBAU" width={40} height={40} priority />
+          <div>
+            <h1 className="text-xl font-semibold">Olá, {firstName} 👋</h1>
+            <p className="text-sm text-neutral-500">{roleName ?? "Membro"}</p>
+          </div>
         </div>
         <form action={logout}>
           <button type="submit" className="text-xs text-neutral-400 underline">

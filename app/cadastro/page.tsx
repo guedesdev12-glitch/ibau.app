@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { signup } from "@/app/actions/auth";
 
@@ -12,6 +13,13 @@ export default async function CadastroPage({
     <main className="flex min-h-screen items-center justify-center px-4">
       <div className="w-full max-w-sm space-y-6">
         <div className="text-center">
+          <Image
+            src="/logo.png"
+            alt="IBAU"
+            width={80}
+            height={80}
+            className="mx-auto mb-2"
+          />
           <h1 className="text-2xl font-semibold">Criar conta</h1>
           <p className="text-sm text-neutral-500">Cadastre-se no IBAU App</p>
         </div>
