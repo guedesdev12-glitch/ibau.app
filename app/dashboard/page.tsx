@@ -1,9 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
-import { CalendarDays, Users2, Shield, MapPin, Phone, AtSign } from "lucide-react";
+import { CalendarDays, Users2, Shield, MapPin, Phone, AtSign, ImagePlus } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { logout } from "@/app/actions/auth";
 import { BottomNav } from "@/components/bottom-nav";
+import { HomeCarousel } from "@/components/home-carousel";
 
 const WEEKDAYS = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
 const MONTHS = [
@@ -27,8 +28,10 @@ export default async function DashboardPage() {
     { data: church },
     { data: services },
     { data: events },
+    { data: banners },
     { data: isDeveloper },
     { data: canManageMembers },
+    { data: canManageChurch },
   ] = await Promise.all([
     supabase
       .from("profiles")
@@ -47,8 +50,14 @@ export default async function DashboardPage() {
       .gte("event_date", new Date().toISOString().slice(0, 10))
       .order("event_date")
       .limit(4),
+    supabase
+      .from("home_banners")
+      .select("id, image_url, title")
+      .eq("active", true)
+      .order("position"),
     supabase.rpc("is_developer"),
     supabase.rpc("has_permission", { p_key: "membros.manage" }),
+    supabase.rpc("has_permission", { p_key: "igreja.manage" }),
   ]);
 
   const roleName = Array.isArray(profile?.roles)
@@ -73,6 +82,8 @@ export default async function DashboardPage() {
           </button>
         </form>
       </div>
+
+      <HomeCarousel banners={banners ?? []} />
 
       <section className="mb-5 rounded-2xl bg-[#173B2C] p-5 text-white">
         <p className="text-lg font-semibold">{church?.name ?? "IBAU"}</p>
@@ -163,9 +174,17 @@ export default async function DashboardPage() {
         {isDeveloper && (
           <Link
             href="/dashboard/admin/categorias"
-            className="col-span-2 flex items-center gap-2 rounded-xl border border-neutral-200 px-4 py-3 text-sm font-medium"
+            className="flex items-center gap-2 rounded-xl border border-neutral-200 px-4 py-3 text-sm font-medium"
           >
             <Shield size={18} /> Categorias & Permissões
+          </Link>
+        )}
+        {canManageChurch && (
+          <Link
+            href="/dashboard/admin/carrossel"
+            className="flex items-center gap-2 rounded-xl border border-neutral-200 px-4 py-3 text-sm font-medium"
+          >
+            <ImagePlus size={18} /> Carrossel
           </Link>
         )}
       </section>

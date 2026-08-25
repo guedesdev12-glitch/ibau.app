@@ -319,6 +319,44 @@ export type Database = {
           },
         ]
       }
+      home_banners: {
+        Row: {
+          active: boolean
+          created_at: string
+          created_by: string | null
+          id: string
+          image_url: string
+          position: number
+          title: string | null
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          image_url: string
+          position?: number
+          title?: string | null
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          image_url?: string
+          position?: number
+          title?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "home_banners_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       permissions: {
         Row: {
           created_at: string
