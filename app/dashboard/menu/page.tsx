@@ -1,0 +1,64 @@
+import Link from "next/link";
+import { CalendarDays, Shield, ImagePlus, ChevronRight } from "lucide-react";
+import { createClient } from "@/lib/supabase/server";
+import { logout } from "@/app/actions/auth";
+import { BottomNav } from "@/components/bottom-nav";
+
+export default async function MenuPage() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const [{ data: profile }, { data: isDeveloper }, { data: canManageMembers }, { data: canManageChurch }] =
+    await Promise.all([
+      supabase.from("profiles").select("full_name, roles(name)").eq("id", user!.id).single(),
+      supabase.rpc("is_developer"),
+      supabase.rpc("has_permission", { p_key: "membros.manage" }),
+      supabase.rpc("has_permission", { p_key: "igreja.manage" }),
+    ]);
+
+  const roleName = Array.isArray(profile?.roles)
+    ? profile?.roles[0]?.name
+    : (profile?.roles as { name: string } | null)?.name;
+
+  const links = [
+    canManageMembers && { href: "/dashboard/membros", label: "Membros", icon: CalendarDays },
+    isDeveloper && { href: "/dashboard/admin/categorias", label: "Categorias & Permissões", icon: Shield },
+    canManageChurch && { href: "/dashboard/admin/carrossel", label: "Carrossel da tela inicial", icon: ImagePlus },
+  ].filter(Boolean) as { href: string; label: string; icon: typeof CalendarDays }[];
+
+  return (
+    <main className="mx-auto max-w-3xl px-4 pb-28 pt-6">
+      <h1 className="mb-5 text-lg font-semibold">Menu</h1>
+
+      <div className="ibau-card mb-5 p-4">
+        <p className="text-sm font-medium">{profile?.full_name}</p>
+        <p className="text-xs text-neutral-500">{roleName}</p>
+      </div>
+
+      <div className="space-y-2">
+        {links.map(({ href, label, icon: Icon }) => (
+          <Link
+            key={href}
+            href={href}
+            className="ibau-card flex items-center justify-between p-4"
+          >
+            <span className="flex items-center gap-3 text-sm font-medium">
+              <Icon size={18} /> {label}
+            </span>
+            <ChevronRight size={16} className="text-neutral-400" />
+          </Link>
+        ))}
+      </div>
+
+      <form action={logout} className="mt-6">
+        <button type="submit" className="text-sm text-neutral-400 underline">
+          Sair da conta
+        </button>
+      </form>
+
+      <BottomNav />
+    </main>
+  );
+}

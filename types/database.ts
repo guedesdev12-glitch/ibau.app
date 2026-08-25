@@ -178,40 +178,56 @@ export type Database = {
         Row: {
           active: boolean
           address: string | null
+          co_leader_id: string | null
           created_at: string
+          generation: string | null
           id: string
           leader_id: string | null
           meeting_time: string | null
           meeting_weekday: number | null
           name: string
           neighborhood: string | null
+          photo_url: string | null
           updated_at: string
         }
         Insert: {
           active?: boolean
           address?: string | null
+          co_leader_id?: string | null
           created_at?: string
+          generation?: string | null
           id?: string
           leader_id?: string | null
           meeting_time?: string | null
           meeting_weekday?: number | null
           name: string
           neighborhood?: string | null
+          photo_url?: string | null
           updated_at?: string
         }
         Update: {
           active?: boolean
           address?: string | null
+          co_leader_id?: string | null
           created_at?: string
+          generation?: string | null
           id?: string
           leader_id?: string | null
           meeting_time?: string | null
           meeting_weekday?: number | null
           name?: string
           neighborhood?: string | null
+          photo_url?: string | null
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "cells_co_leader_id_fkey"
+            columns: ["co_leader_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "cells_leader_id_fkey"
             columns: ["leader_id"]
@@ -286,6 +302,7 @@ export type Database = {
           event_date: string
           id: string
           location: string | null
+          poster_url: string | null
           start_time: string | null
           title: string
         }
@@ -296,6 +313,7 @@ export type Database = {
           event_date: string
           id?: string
           location?: string | null
+          poster_url?: string | null
           start_time?: string | null
           title: string
         }
@@ -306,6 +324,7 @@ export type Database = {
           event_date?: string
           id?: string
           location?: string | null
+          poster_url?: string | null
           start_time?: string | null
           title?: string
         }

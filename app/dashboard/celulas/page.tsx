@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { ArrowLeft, ChevronRight } from "lucide-react";
+import Image from "next/image";
+import { ArrowLeft, ChevronRight, MapPin } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
-import { createCell } from "@/app/actions/cells";
+import { CellCreateForm } from "@/components/cell-create-form";
 import { BottomNav } from "@/components/bottom-nav";
 
 const WEEKDAYS = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
@@ -9,16 +10,19 @@ const WEEKDAYS = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "
 export default async function CelulasPage() {
   const supabase = await createClient();
 
-  const [{ data: cells }, { data: canManage }] = await Promise.all([
+  const [{ data: cells }, { data: canManage }, { data: members }] = await Promise.all([
     supabase
       .from("cells")
-      .select("id, name, neighborhood, meeting_weekday, meeting_time, active")
+      .select(
+        "id, name, neighborhood, meeting_weekday, meeting_time, photo_url, generation, profiles!cells_leader_id_fkey(full_name)",
+      )
       .order("name"),
     supabase.rpc("has_permission", { p_key: "celulas.manage" }),
+    supabase.from("profiles").select("id, full_name").order("full_name"),
   ]);
 
   return (
-    <main className="mx-auto max-w-3xl px-4 pb-24 pt-6">
+    <main className="mx-auto max-w-3xl px-4 pb-28 pt-6">
       <div className="mb-6 flex items-center gap-3">
         <Link href="/dashboard">
           <ArrowLeft size={20} />
@@ -26,72 +30,47 @@ export default async function CelulasPage() {
         <h1 className="text-lg font-semibold">Células</h1>
       </div>
 
-      <ul className="mb-8 space-y-2">
-        {cells?.map((cell) => (
-          <li key={cell.id}>
+      <div className="mb-6 space-y-3">
+        {cells?.map((cell) => {
+          const leader = Array.isArray(cell.profiles) ? cell.profiles[0] : cell.profiles;
+          return (
             <Link
+              key={cell.id}
               href={`/dashboard/celulas/${cell.id}`}
-              className="flex items-center justify-between rounded-xl border border-neutral-200 px-4 py-3 text-sm"
+              className="ibau-card flex items-center gap-3 p-3"
             >
-              <span>
-                <p className="font-medium">{cell.name}</p>
-                <p className="text-neutral-500">
+              <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-xl bg-neutral-100">
+                {cell.photo_url ? (
+                  <Image src={cell.photo_url} alt={cell.name} fill className="object-cover" />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center text-neutral-300">
+                    <MapPin size={20} />
+                  </div>
+                )}
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-medium">
+                  {cell.name}
+                  {leader?.full_name && (
+                    <span className="font-normal text-neutral-400"> · {leader.full_name}</span>
+                  )}
+                </p>
+                <p className="text-xs text-neutral-500">
                   {cell.neighborhood ?? "Bairro não informado"}
                   {cell.meeting_weekday !== null &&
-                    ` · ${WEEKDAYS[cell.meeting_weekday]}${cell.meeting_time ? ` às ${cell.meeting_time}` : ""}`}
+                    ` · ${WEEKDAYS[cell.meeting_weekday]}${cell.meeting_time ? ` às ${cell.meeting_time.slice(0, 5)}` : ""}`}
                 </p>
-              </span>
+              </div>
               <ChevronRight size={16} className="text-neutral-400" />
             </Link>
-          </li>
-        ))}
+          );
+        })}
         {cells?.length === 0 && (
           <p className="text-sm text-neutral-500">Nenhuma célula cadastrada ainda.</p>
         )}
-      </ul>
+      </div>
 
-      {canManage && (
-        <section className="rounded-xl border border-neutral-200 p-4">
-          <h2 className="mb-3 text-sm font-medium">Nova célula</h2>
-          <form action={createCell} className="space-y-3">
-            <input
-              name="name"
-              placeholder="Nome da célula"
-              required
-              className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm"
-            />
-            <input
-              name="neighborhood"
-              placeholder="Bairro"
-              className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm"
-            />
-            <div className="flex gap-3">
-              <select
-                name="meeting_weekday"
-                className="w-1/2 rounded-lg border border-neutral-300 px-3 py-2 text-sm"
-              >
-                <option value="">Dia da semana</option>
-                {WEEKDAYS.map((day, idx) => (
-                  <option key={day} value={idx}>
-                    {day}
-                  </option>
-                ))}
-              </select>
-              <input
-                type="time"
-                name="meeting_time"
-                className="w-1/2 rounded-lg border border-neutral-300 px-3 py-2 text-sm"
-              />
-            </div>
-            <button
-              type="submit"
-              className="w-full rounded-lg bg-[#173B2C] py-2.5 text-sm font-medium text-white"
-            >
-              Criar célula
-            </button>
-          </form>
-        </section>
-      )}
+      {canManage && <CellCreateForm members={members ?? []} />}
 
       <BottomNav />
     </main>
