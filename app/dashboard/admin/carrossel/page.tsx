@@ -6,7 +6,12 @@ import { createClient } from "@/lib/supabase/server";
 import { uploadBanner, deleteBanner, toggleBannerActive, moveBanner } from "@/app/actions/banners";
 import { BannerControls } from "@/components/banner-controls";
 
-export default async function CarrosselAdminPage() {
+export default async function CarrosselAdminPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string; success?: string }>;
+}) {
+  const { error, success } = await searchParams;
   const supabase = await createClient();
 
   const { data: canManage } = await supabase.rpc("has_permission", {
@@ -30,6 +35,15 @@ export default async function CarrosselAdminPage() {
           <p className="text-xs text-neutral-500">Fotos e avisos que aparecem para todo mundo</p>
         </div>
       </div>
+
+      {error && (
+        <p className="mb-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>
+      )}
+      {success && (
+        <p className="mb-4 rounded-xl bg-green-50 px-4 py-3 text-sm text-green-700">
+          Foto publicada no carrossel!
+        </p>
+      )}
 
       <form action={uploadBanner} className="ibau-card mb-6 p-5">
         <p className="mb-3 flex items-center gap-2 text-sm font-semibold">

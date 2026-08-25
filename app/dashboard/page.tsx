@@ -28,10 +28,10 @@ function formatEventDate(dateStr: string) {
 }
 
 const QUICK_LINKS = [
-  { href: "/dashboard/celulas", label: "Células", icon: Users2, color: "#14532d", bg: "#e8f3ec" },
-  { href: "/dashboard/membros", label: "Membros", icon: CalendarDays, color: "#1c5aa6", bg: "#e8f0fa", perm: "membros" },
-  { href: "/dashboard/admin/categorias", label: "Categorias & Permissões", icon: Shield, color: "#d5342e", bg: "#fbeaea", perm: "dev" },
-  { href: "/dashboard/admin/carrossel", label: "Carrossel", icon: ImagePlus, color: "#f0a922", bg: "#fdf3e0", perm: "igreja" },
+  { href: "/dashboard/celulas", label: "Células", icon: Users2, perm: undefined },
+  { href: "/dashboard/membros", label: "Membros", icon: CalendarDays, perm: "membros" },
+  { href: "/dashboard/admin/categorias", label: "Categorias & Permissões", icon: Shield, perm: "dev" },
+  { href: "/dashboard/admin/carrossel", label: "Carrossel", icon: ImagePlus, perm: "igreja" },
 ];
 
 export default async function DashboardPage() {
@@ -111,7 +111,7 @@ export default async function DashboardPage() {
       {/* Painel de avisos / info institucional */}
       <section className="ibau-card mb-5 overflow-hidden">
         <div className="flex items-center gap-2 border-b border-neutral-100 px-5 py-3">
-          <Megaphone size={16} className="text-[#14532d]" />
+          <Megaphone size={16} className="text-neutral-700" />
           <p className="text-sm font-semibold">Sobre a {church?.name ?? "IBAU"}</p>
         </div>
         <div className="px-5 py-4">
@@ -169,11 +169,11 @@ export default async function DashboardPage() {
                 const { day, month } = formatEventDate(e.event_date);
                 return (
                   <div key={e.id} className="flex items-center gap-2.5">
-                    <div className="flex h-9 w-9 flex-shrink-0 flex-col items-center justify-center rounded-lg bg-[#14532d]/10">
-                      <span className="text-xs font-bold leading-none text-[#14532d]">
+                    <div className="flex h-9 w-9 flex-shrink-0 flex-col items-center justify-center rounded-lg bg-neutral-100">
+                      <span className="text-xs font-bold leading-none text-neutral-800">
                         {day}
                       </span>
-                      <span className="text-[8px] uppercase text-[#14532d]/70">{month}</span>
+                      <span className="text-[8px] uppercase text-neutral-500">{month}</span>
                     </div>
                     <p className="text-xs font-medium leading-tight">{e.title}</p>
                   </div>
@@ -187,16 +187,13 @@ export default async function DashboardPage() {
       </div>
 
       <section className="grid grid-cols-2 gap-3">
-        {QUICK_LINKS.filter((l) => !l.perm || permMap[l.perm]).map(({ href, label, icon: Icon, color, bg }) => (
+        {QUICK_LINKS.filter((l) => !l.perm || permMap[l.perm]).map(({ href, label, icon: Icon }) => (
           <Link
             key={href}
             href={href}
             className="ibau-tile ibau-card flex items-center gap-3 p-4"
           >
-            <span
-              className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl"
-              style={{ backgroundColor: bg, color }}
-            >
+            <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-neutral-900 text-white">
               <Icon size={19} />
             </span>
             <span className="text-sm font-medium leading-tight">{label}</span>
