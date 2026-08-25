@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { redirect } from "next/navigation";
-import { ArrowLeft, ImagePlus } from "lucide-react";
+import { ArrowLeft, ImagePlus, Upload } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { uploadBanner, deleteBanner, toggleBannerActive, moveBanner } from "@/app/actions/banners";
 import { BannerControls } from "@/components/banner-controls";
@@ -25,15 +25,53 @@ export default async function CarrosselAdminPage() {
         <Link href="/dashboard">
           <ArrowLeft size={20} />
         </Link>
-        <h1 className="text-lg font-semibold">Carrossel da tela inicial</h1>
+        <div>
+          <h1 className="text-lg font-semibold">Carrossel da tela inicial</h1>
+          <p className="text-xs text-neutral-500">Fotos e avisos que aparecem para todo mundo</p>
+        </div>
       </div>
 
-      <div className="mb-6 space-y-3">
+      <form action={uploadBanner} className="ibau-card mb-6 p-5">
+        <p className="mb-3 flex items-center gap-2 text-sm font-semibold">
+          <ImagePlus size={16} className="text-[#14532d]" /> Adicionar foto ou aviso
+        </p>
+
+        <label
+          htmlFor="banner-image"
+          className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-neutral-300 bg-neutral-50 px-4 py-8 text-center transition hover:border-[#14532d] hover:bg-[#14532d]/5"
+        >
+          <Upload size={24} className="text-neutral-400" />
+          <span className="text-sm font-medium text-neutral-600">
+            Toque para escolher uma foto
+          </span>
+          <span className="text-xs text-neutral-400">JPG ou PNG</span>
+          <input
+            id="banner-image"
+            type="file"
+            name="image"
+            accept="image/*"
+            required
+            className="sr-only"
+          />
+        </label>
+
+        <input
+          type="text"
+          name="title"
+          placeholder="Legenda / aviso (opcional)"
+          className="mt-3 w-full rounded-lg border border-neutral-200 px-3 py-2.5 text-sm"
+        />
+        <button
+          type="submit"
+          className="mt-3 w-full rounded-lg bg-[#14532d] py-2.5 text-sm font-medium text-white"
+        >
+          Publicar no carrossel
+        </button>
+      </form>
+
+      <div className="space-y-3">
         {banners?.map((b, i) => (
-          <div
-            key={b.id}
-            className="flex items-center gap-3 rounded-xl border border-neutral-200 p-2"
-          >
+          <div key={b.id} className="ibau-card flex items-center gap-3 p-3">
             <div className="relative h-16 w-24 flex-shrink-0 overflow-hidden rounded-lg bg-neutral-100">
               <Image src={b.image_url} alt={b.title ?? ""} fill className="object-cover" />
             </div>
@@ -57,31 +95,6 @@ export default async function CarrosselAdminPage() {
           </p>
         )}
       </div>
-
-      <form action={uploadBanner} className="space-y-3 rounded-xl border border-neutral-200 p-4">
-        <p className="flex items-center gap-2 text-sm font-medium">
-          <ImagePlus size={16} /> Adicionar ao carrossel
-        </p>
-        <input
-          type="file"
-          name="image"
-          accept="image/*"
-          required
-          className="w-full text-sm"
-        />
-        <input
-          type="text"
-          name="title"
-          placeholder="Legenda / aviso (opcional)"
-          className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm"
-        />
-        <button
-          type="submit"
-          className="w-full rounded-lg bg-[#173B2C] py-2.5 text-sm font-medium text-white"
-        >
-          Enviar
-        </button>
-      </form>
     </main>
   );
 }

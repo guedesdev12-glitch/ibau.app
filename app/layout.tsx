@@ -5,8 +5,8 @@ export const metadata: Metadata = {
   title: "IBAU App",
   description: "Aplicativo da igreja IBAU — membros, células, loja, bilheteria e finanças.",
   icons: {
-    icon: "/logo-mark.png",
-    apple: "/logo-mark.png",
+    icon: "/logo-mark-v2.png",
+    apple: "/logo-mark-v2.png",
   },
 };
 

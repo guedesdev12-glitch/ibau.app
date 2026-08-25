@@ -14,7 +14,7 @@ export default async function CadastroPage({
       <div className="w-full max-w-sm space-y-6">
         <div className="text-center">
           <Image
-            src="/logo.png"
+            src="/logo-v2.png"
             alt="IBAU"
             width={80}
             height={80}
