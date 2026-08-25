@@ -12,6 +12,132 @@ export type Database = {
   }
   public: {
     Tables: {
+      cell_meeting_team: {
+        Row: {
+          meeting_id: string
+          profile_id: string
+          role: Database["public"]["Enums"]["meeting_team_role"]
+        }
+        Insert: {
+          meeting_id: string
+          profile_id: string
+          role?: Database["public"]["Enums"]["meeting_team_role"]
+        }
+        Update: {
+          meeting_id?: string
+          profile_id?: string
+          role?: Database["public"]["Enums"]["meeting_team_role"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cell_meeting_team_meeting_id_fkey"
+            columns: ["meeting_id"]
+            isOneToOne: false
+            referencedRelation: "cell_meetings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cell_meeting_team_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cell_meeting_visitors: {
+        Row: {
+          meeting_id: string
+          visitor_id: string
+        }
+        Insert: {
+          meeting_id: string
+          visitor_id: string
+        }
+        Update: {
+          meeting_id?: string
+          visitor_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cell_meeting_visitors_meeting_id_fkey"
+            columns: ["meeting_id"]
+            isOneToOne: false
+            referencedRelation: "cell_meetings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cell_meeting_visitors_visitor_id_fkey"
+            columns: ["visitor_id"]
+            isOneToOne: false
+            referencedRelation: "visitors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cell_meetings: {
+        Row: {
+          cell_id: string
+          created_at: string
+          created_by: string | null
+          duration_minutes: number | null
+          id: string
+          location: string | null
+          meeting_date: string
+          notes: string | null
+          offering_amount: number | null
+          offering_type: Database["public"]["Enums"]["offering_type"] | null
+          start_time: string | null
+          theme: string | null
+          updated_at: string
+        }
+        Insert: {
+          cell_id: string
+          created_at?: string
+          created_by?: string | null
+          duration_minutes?: number | null
+          id?: string
+          location?: string | null
+          meeting_date: string
+          notes?: string | null
+          offering_amount?: number | null
+          offering_type?: Database["public"]["Enums"]["offering_type"] | null
+          start_time?: string | null
+          theme?: string | null
+          updated_at?: string
+        }
+        Update: {
+          cell_id?: string
+          created_at?: string
+          created_by?: string | null
+          duration_minutes?: number | null
+          id?: string
+          location?: string | null
+          meeting_date?: string
+          notes?: string | null
+          offering_amount?: number | null
+          offering_type?: Database["public"]["Enums"]["offering_type"] | null
+          start_time?: string | null
+          theme?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cell_meetings_cell_id_fkey"
+            columns: ["cell_id"]
+            isOneToOne: false
+            referencedRelation: "cells"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cell_meetings_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cell_members: {
         Row: {
           cell_id: string
@@ -131,20 +257,64 @@ export type Database = {
         }
         Relationships: []
       }
+      visitors: {
+        Row: {
+          cell_id: string
+          created_at: string
+          full_name: string
+          id: string
+          phone: string | null
+        }
+        Insert: {
+          cell_id: string
+          created_at?: string
+          full_name: string
+          id?: string
+          phone?: string | null
+        }
+        Update: {
+          cell_id?: string
+          created_at?: string
+          full_name?: string
+          id?: string
+          phone?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "visitors_cell_id_fkey"
+            columns: ["cell_id"]
+            isOneToOne: false
+            referencedRelation: "cells"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      cell_monthly_summary: {
+        Args: { p_cell_id: string; p_month: number; p_year: number }
+        Returns: {
+          encontros_count: number
+          ofertas_total: number
+          participantes_count: number
+          visitantes_count: number
+        }[]
+      }
       current_role: {
         Args: never
         Returns: Database["public"]["Enums"]["member_role"]
       }
       is_cell_leader: { Args: { target_cell_id: string }; Returns: boolean }
+      is_cell_member: { Args: { target_cell_id: string }; Returns: boolean }
     }
     Enums: {
       cell_member_role: "lider" | "anfitriao" | "membro"
+      meeting_team_role: "lider" | "co_lider" | "auxiliar"
       member_role: "admin" | "lider_celula" | "membro"
+      offering_type: "voluntaria" | "dizimo" | "oferta_especial"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -273,7 +443,9 @@ export const Constants = {
   public: {
     Enums: {
       cell_member_role: ["lider", "anfitriao", "membro"],
+      meeting_team_role: ["lider", "co_lider", "auxiliar"],
       member_role: ["admin", "lider_celula", "membro"],
+      offering_type: ["voluntaria", "dizimo", "oferta_especial"],
     },
   },
 } as const

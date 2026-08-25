@@ -28,16 +28,18 @@ export default async function CelulasPage() {
 
       <ul className="mb-8 space-y-2">
         {cells?.map((cell) => (
-          <li
-            key={cell.id}
-            className="rounded-md border border-neutral-200 px-4 py-3 text-sm"
-          >
-            <p className="font-medium">{cell.name}</p>
-            <p className="text-neutral-500">
-              {cell.neighborhood ?? "Bairro não informado"}
-              {cell.meeting_weekday !== null &&
-                ` · ${WEEKDAYS[cell.meeting_weekday]}${cell.meeting_time ? ` às ${cell.meeting_time}` : ""}`}
-            </p>
+          <li key={cell.id}>
+            <a
+              href={`/dashboard/celulas/${cell.id}`}
+              className="block rounded-md border border-neutral-200 px-4 py-3 text-sm"
+            >
+              <p className="font-medium">{cell.name}</p>
+              <p className="text-neutral-500">
+                {cell.neighborhood ?? "Bairro não informado"}
+                {cell.meeting_weekday !== null &&
+                  ` · ${WEEKDAYS[cell.meeting_weekday]}${cell.meeting_time ? ` às ${cell.meeting_time}` : ""}`}
+              </p>
+            </a>
           </li>
         ))}
         {cells?.length === 0 && (
