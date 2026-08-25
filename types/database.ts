@@ -221,6 +221,128 @@ export type Database = {
           },
         ]
       }
+      church_services: {
+        Row: {
+          active: boolean
+          created_at: string
+          id: string
+          label: string
+          start_time: string
+          weekday: number
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          label: string
+          start_time: string
+          weekday: number
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          label?: string
+          start_time?: string
+          weekday?: number
+        }
+        Relationships: []
+      }
+      church_settings: {
+        Row: {
+          about: string | null
+          address: string | null
+          id: boolean
+          instagram: string | null
+          name: string
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          about?: string | null
+          address?: string | null
+          id?: boolean
+          instagram?: string | null
+          name?: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          about?: string | null
+          address?: string | null
+          id?: boolean
+          instagram?: string | null
+          name?: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      events: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string | null
+          event_date: string
+          id: string
+          location: string | null
+          start_time: string | null
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          event_date: string
+          id?: string
+          location?: string | null
+          start_time?: string | null
+          title: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          event_date?: string
+          id?: string
+          location?: string | null
+          start_time?: string | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "events_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      permissions: {
+        Row: {
+          created_at: string
+          id: string
+          key: string
+          label: string
+          module: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          key: string
+          label: string
+          module: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          key?: string
+          label?: string
+          module?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           address: string | null
@@ -230,7 +352,7 @@ export type Database = {
           full_name: string
           id: string
           phone: string | null
-          role: Database["public"]["Enums"]["member_role"]
+          role_id: string
           updated_at: string
         }
         Insert: {
@@ -241,7 +363,7 @@ export type Database = {
           full_name: string
           id: string
           phone?: string | null
-          role?: Database["public"]["Enums"]["member_role"]
+          role_id: string
           updated_at?: string
         }
         Update: {
@@ -252,8 +374,67 @@ export type Database = {
           full_name?: string
           id?: string
           phone?: string | null
-          role?: Database["public"]["Enums"]["member_role"]
+          role_id?: string
           updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_role_id_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "roles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      role_permissions: {
+        Row: {
+          permission_id: string
+          role_id: string
+        }
+        Insert: {
+          permission_id: string
+          role_id: string
+        }
+        Update: {
+          permission_id?: string
+          role_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "role_permissions_permission_id_fkey"
+            columns: ["permission_id"]
+            isOneToOne: false
+            referencedRelation: "permissions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "role_permissions_role_id_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "roles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      roles: {
+        Row: {
+          created_at: string
+          id: string
+          is_developer: boolean
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_developer?: boolean
+          name: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_developer?: boolean
+          name?: string
         }
         Relationships: []
       }
@@ -303,17 +484,14 @@ export type Database = {
           visitantes_count: number
         }[]
       }
-      current_role: {
-        Args: never
-        Returns: Database["public"]["Enums"]["member_role"]
-      }
+      has_permission: { Args: { p_key: string }; Returns: boolean }
       is_cell_leader: { Args: { target_cell_id: string }; Returns: boolean }
       is_cell_member: { Args: { target_cell_id: string }; Returns: boolean }
+      is_developer: { Args: never; Returns: boolean }
     }
     Enums: {
       cell_member_role: "lider" | "anfitriao" | "membro"
       meeting_team_role: "lider" | "co_lider" | "auxiliar"
-      member_role: "admin" | "lider_celula" | "membro"
       offering_type: "voluntaria" | "dizimo" | "oferta_especial"
     }
     CompositeTypes: {
@@ -444,7 +622,6 @@ export const Constants = {
     Enums: {
       cell_member_role: ["lider", "anfitriao", "membro"],
       meeting_team_role: ["lider", "co_lider", "auxiliar"],
-      member_role: ["admin", "lider_celula", "membro"],
       offering_type: ["voluntaria", "dizimo", "oferta_especial"],
     },
   },

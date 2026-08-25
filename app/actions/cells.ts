@@ -1,5 +1,6 @@
 "use server";
 
+import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 
@@ -10,15 +11,20 @@ export async function createCell(formData: FormData) {
   const meetingTime = String(formData.get("meeting_time") ?? "") || null;
 
   const supabase = await createClient();
-  const { error } = await supabase.from("cells").insert({
-    name,
-    neighborhood,
-    meeting_weekday: meetingWeekday ? Number(meetingWeekday) : null,
-    meeting_time: meetingTime,
-  });
+  const { data, error } = await supabase
+    .from("cells")
+    .insert({
+      name,
+      neighborhood,
+      meeting_weekday: meetingWeekday ? Number(meetingWeekday) : null,
+      meeting_time: meetingTime,
+    })
+    .select("id")
+    .single();
 
   if (error) throw new Error(error.message);
   revalidatePath("/dashboard/celulas");
+  redirect(`/dashboard/celulas/${data.id}`);
 }
 
 export async function addMemberToCell(cellId: string, profileId: string) {
