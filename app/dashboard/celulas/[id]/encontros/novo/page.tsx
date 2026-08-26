@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { createMeeting } from "@/app/actions/meetings";
+import { TopBar } from "@/components/top-bar";
 
 export default async function NovoEncontroPage({
   params,
@@ -14,7 +15,9 @@ export default async function NovoEncontroPage({
   const createMeetingForCell = createMeeting.bind(null, id);
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-6">
+    <>
+      <TopBar />
+      <main className="mx-auto max-w-3xl px-4 pb-24 pt-6">
       <div className="mb-6 flex items-center gap-3">
         <Link href={`/dashboard/celulas/${id}`}>
           <ArrowLeft size={20} />
@@ -80,7 +83,7 @@ export default async function NovoEncontroPage({
 
         <button
           type="submit"
-          className="mt-4 w-full rounded-xl bg-[#173B2C] py-3 text-sm font-medium text-white"
+          className="mt-4 w-full rounded-xl bg-neutral-900 py-3 text-sm font-medium text-white"
         >
           Salvar encontro
         </button>
@@ -88,6 +91,7 @@ export default async function NovoEncontroPage({
           Depois de salvar, você poderá adicionar equipe, visitantes, oferta e observações.
         </p>
       </form>
-    </main>
+      </main>
+    </>
   );
 }

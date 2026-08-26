@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Users2, UserPlus, Heart, CalendarDays, Plus, ChevronRight } from "lucide-react";
+import { Users2, UserPlus, Heart, CalendarDays, Plus, ChevronRight, MapPin } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/bottom-nav";
+import { TopBar } from "@/components/top-bar";
 
 function formatDate(dateStr: string) {
   const [y, m, d] = dateStr.split("-").map(Number);
@@ -22,23 +23,13 @@ export default async function CelulaDashboardPage({
   const { id } = await params;
   const supabase = await createClient();
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
   const { data: cell } = await supabase
     .from("cells")
-    .select("id, name")
+    .select("id, name, photo_url, neighborhood")
     .eq("id", id)
     .single();
 
   if (!cell) notFound();
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("full_name")
-    .eq("id", user!.id)
-    .single();
 
   const today = new Date().toISOString().slice(0, 10);
 
@@ -91,119 +82,137 @@ export default async function CelulaDashboardPage({
     ofertas_total: 0,
   };
 
-  const firstName = profile?.full_name?.split(" ")[0] ?? "";
-
   return (
-    <main className="mx-auto max-w-3xl px-4 pb-24 pt-8">
-      <p className="text-lg">Olá, {firstName}! 👋</p>
-      <h1 className="mt-1 text-2xl font-semibold">{cell.name}</h1>
-      <p className="mt-1 text-sm text-neutral-500">
-        Acompanhe e registre os encontros da sua célula.
-      </p>
-
-      <Link
-        href={`/dashboard/celulas/${id}/encontros/novo`}
-        className="mt-5 flex items-center justify-center gap-2 rounded-xl bg-[#173B2C] py-3 text-sm font-medium text-white"
-      >
-        <Plus size={18} /> Novo encontro
-      </Link>
-
-      {nextMeeting && (
-        <section className="mt-5 rounded-2xl border border-neutral-200 p-4">
-          <p className="mb-2 text-xs font-medium uppercase tracking-wide text-neutral-400">
-            Próximo encontro
-          </p>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-neutral-100">
-                <CalendarDays size={18} />
+    <>
+      <TopBar />
+      <main className="mx-auto max-w-3xl px-4 pb-28 pt-6">
+        <div className="mb-5 flex items-center gap-3">
+          <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-2xl bg-neutral-100">
+            {cell.photo_url ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={cell.photo_url} alt={cell.name} className="h-full w-full object-cover" />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center text-neutral-300">
+                <MapPin size={20} />
               </div>
-              <div>
-                <p className="text-sm font-medium">
-                  {formatDate(nextMeeting.meeting_date)}
-                  {nextMeeting.start_time && ` · ${nextMeeting.start_time.slice(0, 5)}`}
-                </p>
-                <p className="text-xs text-neutral-500">{nextMeeting.location}</p>
-              </div>
-            </div>
-            <span className="rounded-full bg-green-50 px-3 py-1 text-xs font-medium text-green-700">
-              Confirmado
-            </span>
+            )}
           </div>
-        </section>
-      )}
-
-      <section className="mt-5">
-        <div className="mb-2 flex items-center justify-between">
-          <p className="text-sm font-medium">Resumo do mês</p>
-        </div>
-        <div className="grid grid-cols-4 gap-2">
-          <div className="rounded-xl border border-neutral-200 px-2 py-3 text-center">
-            <CalendarDays size={18} className="mx-auto mb-1 text-neutral-500" />
-            <p className="text-lg font-semibold">{summary.encontros_count}</p>
-            <p className="text-[10px] text-neutral-500">Encontros</p>
-          </div>
-          <div className="rounded-xl border border-neutral-200 px-2 py-3 text-center">
-            <Users2 size={18} className="mx-auto mb-1 text-neutral-500" />
-            <p className="text-lg font-semibold">{summary.participantes_count}</p>
-            <p className="text-[10px] text-neutral-500">Participantes</p>
-          </div>
-          <div className="rounded-xl border border-neutral-200 px-2 py-3 text-center">
-            <UserPlus size={18} className="mx-auto mb-1 text-neutral-500" />
-            <p className="text-lg font-semibold">{summary.visitantes_count}</p>
-            <p className="text-[10px] text-neutral-500">Visitantes</p>
-          </div>
-          <div className="rounded-xl border border-neutral-200 px-2 py-3 text-center">
-            <Heart size={18} className="mx-auto mb-1 text-neutral-500" />
-            <p className="text-sm font-semibold">
-              R$ {Number(summary.ofertas_total).toFixed(0)}
+          <div>
+            <h1 className="text-lg font-semibold leading-tight">{cell.name}</h1>
+            <p className="text-xs text-neutral-500">
+              {cell.neighborhood ?? "Acompanhe e registre os encontros da sua célula."}
             </p>
-            <p className="text-[10px] text-neutral-500">Em ofertas</p>
           </div>
         </div>
-      </section>
 
-      {lastMeeting && (
-        <section className="mt-5 rounded-2xl border border-neutral-200 p-4">
-          <p className="mb-2 text-xs font-medium uppercase tracking-wide text-neutral-400">
-            Último encontro
-          </p>
-          <p className="text-sm font-medium">
-            {formatDate(lastMeeting.meeting_date)}
-            {lastMeeting.start_time && ` · ${lastMeeting.start_time.slice(0, 5)}`}
-          </p>
-          <p className="mb-3 text-xs text-neutral-500">{lastMeeting.location}</p>
-          <div className="mb-3 flex gap-4 text-xs text-neutral-600">
-            <span className="flex items-center gap-1">
-              <Users2 size={14} /> {lastMeetingCounts.participantes} participantes
-            </span>
-            <span className="flex items-center gap-1">
-              <UserPlus size={14} /> {lastMeetingCounts.visitantes} visitantes
-            </span>
-            <span className="flex items-center gap-1">
-              <Heart size={14} /> R$ {Number(lastMeeting.offering_amount ?? 0).toFixed(0)}
-            </span>
-          </div>
-          <Link
-            href={`/dashboard/celulas/${id}/encontros/${lastMeeting.id}`}
-            className="flex items-center justify-center gap-1 rounded-lg border border-neutral-200 py-2 text-sm font-medium"
-          >
-            Ver detalhes do encontro <ChevronRight size={16} />
-          </Link>
-        </section>
-      )}
-
-      <div className="mt-5">
         <Link
-          href={`/dashboard/celulas/${id}/encontros`}
-          className="flex items-center justify-between rounded-2xl border border-neutral-200 p-4 text-sm font-medium"
+          href={`/dashboard/celulas/${id}/encontros/novo`}
+          className="ibau-tile flex items-center justify-center gap-2 rounded-xl bg-neutral-900 py-3 text-sm font-medium text-white shadow-[0_10px_24px_-12px_rgba(0,0,0,0.5)]"
         >
-          Ver histórico de encontros
-          <ChevronRight size={16} />
+          <Plus size={18} /> Novo encontro
         </Link>
-      </div>
 
-      <BottomNav />
-    </main>
+        {nextMeeting && (
+          <section className="ibau-card mt-5 p-4">
+            <p className="mb-2 text-xs font-medium uppercase tracking-wide text-neutral-400">
+              Próximo encontro
+            </p>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-neutral-100">
+                  <CalendarDays size={18} />
+                </div>
+                <div>
+                  <p className="text-sm font-medium">
+                    {formatDate(nextMeeting.meeting_date)}
+                    {nextMeeting.start_time && ` · ${nextMeeting.start_time.slice(0, 5)}`}
+                  </p>
+                  <p className="text-xs text-neutral-500">{nextMeeting.location}</p>
+                </div>
+              </div>
+              <Link
+                href={`/dashboard/celulas/${id}/encontros/${nextMeeting.id}`}
+                className="rounded-full bg-neutral-100 px-3 py-1 text-xs font-medium text-neutral-700"
+              >
+                Abrir
+              </Link>
+            </div>
+          </section>
+        )}
+
+        <section className="mt-5">
+          <p className="ibau-section-title mb-2 text-sm font-semibold">
+            <span className="ibau-section-icon"><CalendarDays size={13} /></span>
+            Resumo do mês
+          </p>
+          <div className="grid grid-cols-4 gap-2">
+            <div className="ibau-card px-2 py-3 text-center">
+              <CalendarDays size={18} className="mx-auto mb-1 text-neutral-500" />
+              <p className="text-lg font-semibold">{summary.encontros_count}</p>
+              <p className="text-[10px] text-neutral-500">Encontros</p>
+            </div>
+            <div className="ibau-card px-2 py-3 text-center">
+              <Users2 size={18} className="mx-auto mb-1 text-neutral-500" />
+              <p className="text-lg font-semibold">{summary.participantes_count}</p>
+              <p className="text-[10px] text-neutral-500">Participantes</p>
+            </div>
+            <div className="ibau-card px-2 py-3 text-center">
+              <UserPlus size={18} className="mx-auto mb-1 text-neutral-500" />
+              <p className="text-lg font-semibold">{summary.visitantes_count}</p>
+              <p className="text-[10px] text-neutral-500">Visitantes</p>
+            </div>
+            <div className="ibau-card px-2 py-3 text-center">
+              <Heart size={18} className="mx-auto mb-1 text-neutral-500" />
+              <p className="text-sm font-semibold">
+                R$ {Number(summary.ofertas_total).toFixed(0)}
+              </p>
+              <p className="text-[10px] text-neutral-500">Em ofertas</p>
+            </div>
+          </div>
+        </section>
+
+        {lastMeeting && (
+          <section className="ibau-card mt-5 p-4">
+            <p className="mb-2 text-xs font-medium uppercase tracking-wide text-neutral-400">
+              Último encontro
+            </p>
+            <p className="text-sm font-medium">
+              {formatDate(lastMeeting.meeting_date)}
+              {lastMeeting.start_time && ` · ${lastMeeting.start_time.slice(0, 5)}`}
+            </p>
+            <p className="mb-3 text-xs text-neutral-500">{lastMeeting.location}</p>
+            <div className="mb-3 flex gap-4 text-xs text-neutral-600">
+              <span className="flex items-center gap-1">
+                <Users2 size={14} /> {lastMeetingCounts.participantes} participantes
+              </span>
+              <span className="flex items-center gap-1">
+                <UserPlus size={14} /> {lastMeetingCounts.visitantes} visitantes
+              </span>
+              <span className="flex items-center gap-1">
+                <Heart size={14} /> R$ {Number(lastMeeting.offering_amount ?? 0).toFixed(0)}
+              </span>
+            </div>
+            <Link
+              href={`/dashboard/celulas/${id}/encontros/${lastMeeting.id}`}
+              className="flex items-center justify-center gap-1 rounded-lg border border-neutral-200 py-2 text-sm font-medium"
+            >
+              Ver detalhes do encontro <ChevronRight size={16} />
+            </Link>
+          </section>
+        )}
+
+        <div className="mt-5">
+          <Link
+            href={`/dashboard/celulas/${id}/encontros`}
+            className="ibau-card flex items-center justify-between p-4 text-sm font-medium"
+          >
+            Ver histórico de encontros
+            <ChevronRight size={16} />
+          </Link>
+        </div>
+
+        <BottomNav />
+      </main>
+    </>
   );
 }

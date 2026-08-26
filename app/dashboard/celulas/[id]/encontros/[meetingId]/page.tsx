@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, Users2, UserPlus, Heart, FileText, ChevronRight, BookOpen } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { updateMeetingBasics } from "@/app/actions/meetings";
+import { TopBar } from "@/components/top-bar";
 
 const OFFERING_LABEL: Record<string, string> = {
   voluntaria: "Oferta voluntária",
@@ -47,7 +48,9 @@ export default async function EncontroPage({
   const updateBasics = updateMeetingBasics.bind(null, id, meetingId);
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-6">
+    <>
+      <TopBar />
+      <main className="mx-auto max-w-3xl px-4 pb-24 pt-6">
       <div className="mb-6 flex items-center gap-3">
         <Link href={`/dashboard/celulas/${id}`}>
           <ArrowLeft size={20} />
@@ -212,6 +215,7 @@ export default async function EncontroPage({
           Tipo de oferta: {OFFERING_LABEL[meeting.offering_type]}
         </p>
       )}
-    </main>
+      </main>
+    </>
   );
 }

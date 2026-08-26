@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
+import { TopBar } from "@/components/top-bar";
 import { setNotes } from "@/app/actions/meetings";
 
 export default async function ObservacoesPage({
@@ -20,7 +21,9 @@ export default async function ObservacoesPage({
   const saveNotes = setNotes.bind(null, id, meetingId);
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-6">
+    <>
+      <TopBar />
+      <main className="mx-auto max-w-3xl px-4 pb-24 pt-6">
       <div className="mb-1 flex items-center gap-3">
         <Link href={`/dashboard/celulas/${id}/encontros/${meetingId}`}>
           <ArrowLeft size={20} />
@@ -49,5 +52,6 @@ export default async function ObservacoesPage({
         </button>
       </form>
     </main>
+    </>
   );
 }

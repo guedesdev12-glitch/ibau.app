@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft, Users2, UserPlus, Heart, ChevronRight } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
+import { TopBar } from "@/components/top-bar";
 
 const MONTHS = [
   "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
@@ -52,7 +53,9 @@ export default async function HistoricoPage({
   });
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-6">
+    <>
+      <TopBar />
+      <main className="mx-auto max-w-3xl px-4 pb-24 pt-6">
       <div className="mb-6 flex items-center gap-3">
         <Link href={`/dashboard/celulas/${id}`}>
           <ArrowLeft size={20} />
@@ -108,6 +111,7 @@ export default async function HistoricoPage({
           Nenhum encontro registrado ainda.
         </p>
       )}
-    </main>
+      </main>
+    </>
   );
 }
