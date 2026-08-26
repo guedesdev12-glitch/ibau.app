@@ -1,29 +1,12 @@
 import Link from "next/link";
 import Image from "next/image";
-import {
-  CalendarDays,
-  Users2,
-  Shield,
-  ImagePlus,
-  ChevronRight,
-  MapPin,
-  Clock,
-} from "lucide-react";
+import { CalendarDays, Users2, Shield, ImagePlus, ChevronRight, Clock } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/bottom-nav";
-import { HomeCarousel } from "@/components/home-carousel";
+import { MediaCarousel } from "@/components/media-carousel";
 import { TopBar } from "@/components/top-bar";
 
 const WEEKDAYS = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
-const MONTHS = [
-  "Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
-  "Jul", "Ago", "Set", "Out", "Nov", "Dez",
-];
-
-function formatEventDate(dateStr: string) {
-  const [y, m, d] = dateStr.split("-").map(Number);
-  return { day: d, month: MONTHS[m - 1] };
-}
 
 const QUICK_LINKS = [
   { href: "/dashboard/celulas", label: "Células", icon: Users2, perm: undefined },
@@ -77,150 +60,149 @@ export default async function DashboardPage() {
     igreja: !!canManageChurch,
   };
 
+  const bannerSlides = (banners ?? []).map((b) => ({
+    id: b.id,
+    image_url: b.image_url,
+    title: b.title,
+  }));
+
+  const eventSlides = (events ?? [])
+    .filter((e) => e.poster_url)
+    .map((e) => ({
+      id: e.id,
+      image_url: e.poster_url as string,
+      title: e.title,
+      href: "/dashboard/eventos",
+    }));
+
   return (
     <>
       <TopBar />
       <main className="mx-auto max-w-3xl px-4 pb-28">
         <p className="pb-4 pt-4 text-sm text-neutral-500">{church?.name ?? "IBAU"}</p>
 
-        <HomeCarousel banners={banners ?? []} churchName={church?.name ?? "IBAU"} />
+        <MediaCarousel
+          slides={bannerSlides}
+          emptyState={
+            <div className="flex aspect-[16/10] w-full items-center justify-center overflow-hidden rounded-2xl border border-black/5 bg-neutral-900 shadow-[0_18px_40px_-16px_rgba(0,0,0,0.35)]">
+              <p className="px-6 text-center text-lg font-semibold text-white/90">
+                Bem-vindo(a) à {church?.name ?? "IBAU"}
+              </p>
+            </div>
+          }
+        />
 
-      {/* Programação */}
-      <section className="mt-6">
-        <div className="mb-3 flex items-center justify-between">
-          <p className="text-base font-semibold">Programação</p>
-        </div>
-        {services && services.length > 0 ? (
+        {/* Atalhos */}
+        <section className="mt-6">
+          <p className="mb-3 text-base font-semibold">Atalhos</p>
           <div className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-1">
-            {services.map((s) => (
-              <div key={s.id} className="ibau-card w-40 flex-shrink-0 p-4">
-                <p className="text-sm font-semibold leading-tight">{s.label}</p>
-                <p className="mt-2 flex items-center gap-1.5 text-xs text-neutral-500">
-                  <Clock size={13} /> {WEEKDAYS[s.weekday]}
-                </p>
-                <p className="text-xs text-neutral-500">{s.start_time.slice(0, 5)}</p>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="rounded-xl border border-dashed border-neutral-200 px-4 py-6 text-center">
-            <p className="text-sm text-neutral-400">Nenhum horário cadastrado ainda.</p>
-          </div>
-        )}
-      </section>
-
-      {/* Eventos */}
-      <section className="mt-6">
-        <div className="mb-3 flex items-center justify-between">
-          <p className="text-base font-semibold">Eventos</p>
-          <Link href="/dashboard/eventos" className="flex items-center text-xs text-neutral-500">
-            Ver mais <ChevronRight size={14} />
-          </Link>
-        </div>
-        {events && events.length > 0 ? (
-          <div className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-1">
-            {events.map((e) => {
-              const { day, month } = formatEventDate(e.event_date);
-              return (
+            {QUICK_LINKS.filter((l) => !l.perm || permMap[l.perm]).map(
+              ({ href, label, icon: Icon }) => (
                 <Link
-                  key={e.id}
-                  href="/dashboard/eventos"
-                  className="ibau-card w-36 flex-shrink-0 overflow-hidden"
+                  key={href}
+                  href={href}
+                  className="ibau-tile ibau-card flex w-24 flex-shrink-0 flex-col items-center gap-2 p-4"
                 >
-                  <div className="relative aspect-[3/4] w-full bg-neutral-100">
-                    {e.poster_url ? (
-                      <Image src={e.poster_url} alt={e.title} fill className="object-cover" />
-                    ) : (
-                      <div className="flex h-full w-full items-center justify-center text-neutral-300">
-                        <CalendarDays size={22} />
-                      </div>
-                    )}
-                  </div>
-                  <div className="p-2.5">
-                    <p className="text-xs font-semibold leading-tight">{e.title}</p>
-                    <p className="mt-1 text-[11px] text-neutral-500">
-                      {day} {month}
-                    </p>
-                  </div>
+                  <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-b from-neutral-800 to-neutral-950 text-white shadow-[0_4px_10px_-4px_rgba(0,0,0,0.5)] ring-1 ring-black/10">
+                    <Icon size={20} />
+                  </span>
+                  <span className="text-center text-[11px] font-medium leading-tight">
+                    {label}
+                  </span>
                 </Link>
-              );
-            })}
+              ),
+            )}
           </div>
-        ) : (
-          <div className="rounded-xl border border-dashed border-neutral-200 px-4 py-6 text-center">
-            <p className="text-sm text-neutral-400">Nenhum evento agendado no momento.</p>
-          </div>
-        )}
-      </section>
+        </section>
 
-      {/* Células */}
-      <section className="mt-6">
-        <div className="mb-3 flex items-center justify-between">
-          <p className="text-base font-semibold">Células</p>
-          <Link href="/dashboard/celulas" className="flex items-center text-xs text-neutral-500">
-            Ver mais <ChevronRight size={14} />
-          </Link>
-        </div>
-        {cells && cells.length > 0 ? (
-          <div className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-1">
-            {cells.map((c) => {
-              const leader = Array.isArray(c.profiles) ? c.profiles[0] : c.profiles;
-              return (
-                <Link
-                  key={c.id}
-                  href={`/dashboard/celulas/${c.id}`}
-                  className="ibau-card w-44 flex-shrink-0 overflow-hidden"
-                >
-                  <div className="relative aspect-[4/3] w-full bg-neutral-100">
-                    {c.photo_url ? (
-                      <Image src={c.photo_url} alt={c.name} fill className="object-cover" />
-                    ) : (
-                      <div className="flex h-full w-full items-center justify-center text-neutral-300">
-                        <MapPin size={22} />
-                      </div>
-                    )}
-                  </div>
-                  <div className="p-2.5">
-                    <p className="text-xs font-semibold leading-tight">{c.name}</p>
-                    {leader?.full_name && (
-                      <p className="mt-1 text-[11px] text-neutral-500">{leader.full_name}</p>
-                    )}
-                  </div>
-                </Link>
-              );
-            })}
+        {/* Programação */}
+        <section className="mt-6">
+          <div className="mb-3 flex items-center justify-between">
+            <p className="text-base font-semibold">Programação</p>
           </div>
-        ) : (
-          <div className="rounded-xl border border-dashed border-neutral-200 px-4 py-6 text-center">
-            <p className="text-sm text-neutral-400">Nenhuma célula cadastrada ainda.</p>
-          </div>
-        )}
-      </section>
-
-      {/* Atalhos */}
-      <section className="mt-6">
-        <p className="mb-3 text-base font-semibold">Atalhos</p>
-        <div className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-1">
-          {QUICK_LINKS.filter((l) => !l.perm || permMap[l.perm]).map(
-            ({ href, label, icon: Icon }) => (
-              <Link
-                key={href}
-                href={href}
-                className="ibau-tile ibau-card flex w-24 flex-shrink-0 flex-col items-center gap-2 p-4"
-              >
-                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-neutral-100 text-neutral-800">
-                  <Icon size={20} />
-                </span>
-                <span className="text-center text-[11px] font-medium leading-tight">
-                  {label}
-                </span>
-              </Link>
-            ),
+          {services && services.length > 0 ? (
+            <div className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-1">
+              {services.map((s) => (
+                <div key={s.id} className="ibau-card w-40 flex-shrink-0 p-4">
+                  <p className="text-sm font-semibold leading-tight">{s.label}</p>
+                  <p className="mt-2 flex items-center gap-1.5 text-xs text-neutral-500">
+                    <Clock size={13} /> {WEEKDAYS[s.weekday]}
+                  </p>
+                  <p className="text-xs text-neutral-500">{s.start_time.slice(0, 5)}</p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-xl border border-dashed border-neutral-200 px-4 py-6 text-center">
+              <p className="text-sm text-neutral-400">Nenhum horário cadastrado ainda.</p>
+            </div>
           )}
-        </div>
-      </section>
+        </section>
 
-      <BottomNav />
+        {/* Eventos */}
+        <section className="mt-6">
+          <div className="mb-3 flex items-center justify-between">
+            <p className="text-base font-semibold">Eventos</p>
+            <Link href="/dashboard/eventos" className="flex items-center text-xs text-neutral-500">
+              Ver mais <ChevronRight size={14} />
+            </Link>
+          </div>
+          <MediaCarousel
+            slides={eventSlides}
+            aspect="aspect-[4/3]"
+            emptyState={
+              <div className="rounded-xl border border-dashed border-neutral-200 px-4 py-6 text-center">
+                <p className="text-sm text-neutral-400">Nenhum evento agendado no momento.</p>
+              </div>
+            }
+          />
+        </section>
+
+        {/* Células */}
+        <section className="mt-6">
+          <div className="mb-3 flex items-center justify-between">
+            <p className="text-base font-semibold">Células</p>
+            <Link href="/dashboard/celulas" className="flex items-center text-xs text-neutral-500">
+              Ver mais <ChevronRight size={14} />
+            </Link>
+          </div>
+          {cells && cells.length > 0 ? (
+            <div className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-1">
+              {cells.map((c) => {
+                const leader = Array.isArray(c.profiles) ? c.profiles[0] : c.profiles;
+                return (
+                  <Link
+                    key={c.id}
+                    href={`/dashboard/celulas/${c.id}`}
+                    className="ibau-card w-44 flex-shrink-0 overflow-hidden"
+                  >
+                    <div className="relative aspect-[4/3] w-full bg-neutral-100">
+                      {c.photo_url ? (
+                        <Image src={c.photo_url} alt={c.name} fill className="object-cover" />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center text-neutral-300">
+                          <Users2 size={22} />
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-2.5">
+                      <p className="text-xs font-semibold leading-tight">{c.name}</p>
+                      {leader?.full_name && (
+                        <p className="mt-1 text-[11px] text-neutral-500">{leader.full_name}</p>
+                      )}
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="rounded-xl border border-dashed border-neutral-200 px-4 py-6 text-center">
+              <p className="text-sm text-neutral-400">Nenhuma célula cadastrada ainda.</p>
+            </div>
+          )}
+        </section>
+
+        <BottomNav />
       </main>
     </>
   );
