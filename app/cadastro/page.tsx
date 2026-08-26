@@ -1,27 +1,17 @@
 import { headers } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
+import { User, Mail } from "lucide-react";
 import { signup, loginWithOAuth } from "@/app/actions/auth";
+import { PasswordInput } from "@/components/password-input";
 
 function GoogleIcon() {
   return (
     <svg width="18" height="18" viewBox="0 0 48 48">
-      <path
-        fill="#FFC107"
-        d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-3.5z"
-      />
-      <path
-        fill="#FF3D00"
-        d="M6.3 14.7l6.6 4.8C14.6 15.9 18.9 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"
-      />
-      <path
-        fill="#4CAF50"
-        d="M24 44c5.5 0 10.4-1.9 14.1-5.1l-6.5-5.5C29.6 35.1 26.9 36 24 36c-5.2 0-9.7-3.3-11.3-8l-6.6 5.1C9.6 39.7 16.2 44 24 44z"
-      />
-      <path
-        fill="#1976D2"
-        d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.2 4.2-4.2 5.5l6.5 5.5C39.5 37.1 44 31.1 44 24c0-1.3-.1-2.7-.4-3.5z"
-      />
+      <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-3.5z" />
+      <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.9 18.9 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 16.3 4 9.7 8.3 6.3 14.7z" />
+      <path fill="#4CAF50" d="M24 44c5.5 0 10.4-1.9 14.1-5.1l-6.5-5.5C29.6 35.1 26.9 36 24 36c-5.2 0-9.7-3.3-11.3-8l-6.6 5.1C9.6 39.7 16.2 44 24 44z" />
+      <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.2 4.2-4.2 5.5l6.5 5.5C39.5 37.1 44 31.1 44 24c0-1.3-.1-2.7-.4-3.5z" />
     </svg>
   );
 }
@@ -49,85 +39,98 @@ export default async function CadastroPage({
   const loginWithApple = loginWithOAuth.bind(null, "apple", origin);
 
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden px-4 py-10">
-      <div className="absolute inset-0 bg-gradient-to-b from-[#123f26] via-[#0a2c18] to-[#04100a]" />
-      <div className="pointer-events-none absolute -top-40 left-1/2 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-[#f0a922]/[0.12] blur-[110px]" />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.05),transparent_55%)]" />
-
-      <div className="relative w-full max-w-sm space-y-7">
-        <div className="text-center">
-          <Image src="/logo-mark-v2.png" alt="IBAU" width={72} height={72} className="mx-auto mb-3" />
-          <h1 className="text-2xl font-semibold text-white">Criar conta</h1>
-          <p className="mt-1 text-sm text-white/60">Cadastre-se no IBAU App</p>
+    <main className="flex min-h-screen items-center justify-center bg-white px-4 py-10">
+      <div className="w-full max-w-sm">
+        <div className="mb-6 text-center">
+          <Image src="/logo-v2.png" alt="IBAU" width={80} height={80} className="mx-auto" priority />
         </div>
 
-        <div className="rounded-3xl bg-white p-6 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.5)]">
-          {error && (
-            <p className="mb-4 rounded-xl bg-red-50 px-3 py-2.5 text-sm text-red-700">
-              {error}
-            </p>
-          )}
+        <div className="mb-6 text-center">
+          <h1 className="text-2xl font-bold text-neutral-900">Criar conta</h1>
+          <p className="mt-1 text-sm text-neutral-500">Cadastre-se no IBAU App</p>
+        </div>
 
-          <div className="space-y-2.5">
-            <form action={loginWithGoogle}>
-              <button
-                type="submit"
-                className="flex w-full items-center justify-center gap-2.5 rounded-xl border border-neutral-200 py-3 text-sm font-medium text-neutral-800 transition hover:bg-neutral-50"
-              >
-                <GoogleIcon /> Continuar com Google
-              </button>
-            </form>
-            <form action={loginWithApple}>
-              <button
-                type="submit"
-                className="flex w-full items-center justify-center gap-2.5 rounded-xl bg-black py-3 text-sm font-medium text-white transition hover:bg-neutral-900"
-              >
-                <AppleIcon /> Continuar com Apple
-              </button>
-            </form>
+        {error && (
+          <p className="mb-4 rounded-xl bg-red-50 px-3 py-2.5 text-sm text-red-700">{error}</p>
+        )}
+
+        <form action={signup} className="space-y-4">
+          <div>
+            <label className="mb-1.5 block text-xs font-medium text-neutral-600">
+              Nome completo
+            </label>
+            <div className="relative">
+              <User size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400" />
+              <input
+                name="full_name"
+                type="text"
+                required
+                placeholder="Digite seu nome completo"
+                className="w-full rounded-xl border border-neutral-200 bg-neutral-50 py-2.5 pl-10 pr-3 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-[#14532d]"
+              />
+            </div>
           </div>
 
-          <div className="my-5 flex items-center gap-3">
-            <div className="h-px flex-1 bg-neutral-200" />
-            <span className="text-xs text-neutral-400">ou cadastre-se com e-mail</span>
-            <div className="h-px flex-1 bg-neutral-200" />
+          <div>
+            <label className="mb-1.5 block text-xs font-medium text-neutral-600">E-mail</label>
+            <div className="relative">
+              <Mail size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400" />
+              <input
+                name="email"
+                type="email"
+                required
+                placeholder="Digite seu e-mail"
+                className="w-full rounded-xl border border-neutral-200 bg-neutral-50 py-2.5 pl-10 pr-3 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-[#14532d]"
+              />
+            </div>
           </div>
 
-          <form action={signup} className="space-y-3">
-            <input
-              name="full_name"
-              type="text"
-              required
-              placeholder="Nome completo"
-              className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3.5 py-2.5 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-neutral-400"
-            />
-            <input
-              name="email"
-              type="email"
-              required
-              placeholder="E-mail"
-              className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3.5 py-2.5 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-neutral-400"
-            />
-            <input
+          <div>
+            <label className="mb-1.5 block text-xs font-medium text-neutral-600">Senha</label>
+            <PasswordInput
               name="password"
-              type="password"
+              placeholder="Mín. 6 caracteres"
               minLength={6}
               required
-              placeholder="Senha (mín. 6 caracteres)"
-              className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3.5 py-2.5 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-neutral-400"
             />
+          </div>
+
+          <button
+            type="submit"
+            className="w-full rounded-xl bg-[#14532d] py-3 text-sm font-semibold text-white transition hover:bg-[#0f3f22]"
+          >
+            Criar conta
+          </button>
+        </form>
+
+        <div className="my-5 flex items-center gap-3">
+          <div className="h-px flex-1 bg-neutral-200" />
+          <span className="text-xs text-neutral-400">ou continue com</span>
+          <div className="h-px flex-1 bg-neutral-200" />
+        </div>
+
+        <div className="grid grid-cols-2 gap-2.5">
+          <form action={loginWithGoogle}>
             <button
               type="submit"
-              className="w-full rounded-xl bg-neutral-900 py-3 text-sm font-semibold text-white transition hover:bg-neutral-800"
+              className="flex w-full items-center justify-center gap-2 rounded-xl border border-neutral-200 py-2.5 text-sm font-medium text-neutral-800 hover:bg-neutral-50"
             >
-              Criar conta
+              <GoogleIcon /> Google
+            </button>
+          </form>
+          <form action={loginWithApple}>
+            <button
+              type="submit"
+              className="flex w-full items-center justify-center gap-2 rounded-xl border border-neutral-200 py-2.5 text-sm font-medium text-neutral-800 hover:bg-neutral-50"
+            >
+              <AppleIcon /> Apple
             </button>
           </form>
         </div>
 
-        <p className="text-center text-sm text-white/60">
+        <p className="mt-6 text-center text-sm text-neutral-500">
           Já tem conta?{" "}
-          <Link href="/login" className="font-medium text-white underline">
+          <Link href="/login" className="font-semibold text-[#14532d]">
             Entrar
           </Link>
         </p>

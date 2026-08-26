@@ -55,3 +55,31 @@ export async function logout() {
   await supabase.auth.signOut();
   redirect("/login");
 }
+
+export async function requestPasswordReset(origin: string, formData: FormData) {
+  const email = String(formData.get("email") ?? "");
+  const supabase = await createClient();
+
+  await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${origin}/auth/callback?next=/redefinir-senha`,
+  });
+
+  // Sempre mostra a mesma mensagem, exista ou não a conta — evita
+  // que alguém descubra quais e-mails estão cadastrados.
+  redirect(
+    "/esqueci-senha?message=Se esse e-mail estiver cadastrado, você vai receber um link para redefinir a senha.",
+  );
+}
+
+export async function updatePassword(formData: FormData) {
+  const password = String(formData.get("password") ?? "");
+  const supabase = await createClient();
+
+  const { error } = await supabase.auth.updateUser({ password });
+
+  if (error) {
+    redirect(`/redefinir-senha?error=${encodeURIComponent(error.message)}`);
+  }
+
+  redirect("/login?message=Senha redefinida! Entre com sua nova senha.");
+}
