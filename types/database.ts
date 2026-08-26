@@ -81,6 +81,7 @@ export type Database = {
           created_at: string
           created_by: string | null
           duration_minutes: number | null
+          end_time: string | null
           id: string
           location: string | null
           meeting_date: string
@@ -96,6 +97,7 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           duration_minutes?: number | null
+          end_time?: string | null
           id?: string
           location?: string | null
           meeting_date: string
@@ -111,6 +113,7 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           duration_minutes?: number | null
+          end_time?: string | null
           id?: string
           location?: string | null
           meeting_date?: string
@@ -503,6 +506,44 @@ export type Database = {
           name?: string
         }
         Relationships: []
+      }
+      weekly_studies: {
+        Row: {
+          content: string
+          created_at: string
+          created_by: string | null
+          file_url: string | null
+          id: string
+          study_date: string
+          title: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          created_by?: string | null
+          file_url?: string | null
+          id?: string
+          study_date: string
+          title: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          created_by?: string | null
+          file_url?: string | null
+          id?: string
+          study_date?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "weekly_studies_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       visitors: {
         Row: {

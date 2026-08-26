@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Users2, UserPlus, Heart, FileText, ChevronRight } from "lucide-react";
+import { ArrowLeft, Users2, UserPlus, Heart, FileText, ChevronRight, BookOpen } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { updateMeetingBasics } from "@/app/actions/meetings";
 
@@ -26,7 +26,7 @@ export default async function EncontroPage({
 
   if (!meeting) notFound();
 
-  const [{ count: teamCount }, { count: visitorCount }] = await Promise.all([
+  const [{ count: teamCount }, { count: visitorCount }, { data: study }] = await Promise.all([
     supabase
       .from("cell_meeting_team")
       .select("*", { count: "exact", head: true })
@@ -35,6 +35,13 @@ export default async function EncontroPage({
       .from("cell_meeting_visitors")
       .select("*", { count: "exact", head: true })
       .eq("meeting_id", meetingId),
+    supabase
+      .from("weekly_studies")
+      .select("id, title, content, file_url, study_date")
+      .lte("study_date", meeting.meeting_date)
+      .order("study_date", { ascending: false })
+      .limit(1)
+      .maybeSingle(),
   ]);
 
   const updateBasics = updateMeetingBasics.bind(null, id, meetingId);
@@ -49,6 +56,26 @@ export default async function EncontroPage({
       </div>
 
       <p className="mb-3 text-sm font-medium text-neutral-500">Informações do encontro</p>
+
+      {study && (
+        <div className="ibau-card mb-4 p-4">
+          <p className="mb-1 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-neutral-400">
+            <BookOpen size={13} /> Estudo da semana
+          </p>
+          <p className="text-sm font-semibold">{study.title}</p>
+          <p className="mt-1 whitespace-pre-line text-xs text-neutral-600">{study.content}</p>
+          {study.file_url && (
+            <a
+              href={study.file_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-2 inline-block text-xs font-medium text-neutral-900 underline"
+            >
+              Abrir material
+            </a>
+          )}
+        </div>
+      )}
 
       <form action={updateBasics} className="space-y-3">
         <div className="grid grid-cols-2 gap-3">
@@ -71,6 +98,16 @@ export default async function EncontroPage({
               className="w-full rounded-xl border border-neutral-200 px-3 py-2.5 text-sm"
             />
           </div>
+        </div>
+
+        <div>
+          <label className="mb-1 block text-xs text-neutral-500">Hora de término</label>
+          <input
+            type="time"
+            name="end_time"
+            defaultValue={meeting.end_time?.slice(0, 5) ?? ""}
+            className="w-full rounded-xl border border-neutral-200 px-3 py-2.5 text-sm"
+          />
         </div>
 
         <div>

@@ -4,10 +4,13 @@ import { createMeeting } from "@/app/actions/meetings";
 
 export default async function NovoEncontroPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ date?: string }>;
 }) {
   const { id } = await params;
+  const { date } = await searchParams;
   const createMeetingForCell = createMeeting.bind(null, id);
 
   return (
@@ -28,6 +31,7 @@ export default async function NovoEncontroPage({
             <input
               type="date"
               name="meeting_date"
+              defaultValue={date}
               required
               className="w-full rounded-xl border border-neutral-200 px-3 py-2.5 text-sm"
             />

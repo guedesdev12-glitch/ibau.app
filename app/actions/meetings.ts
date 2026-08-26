@@ -16,6 +16,7 @@ export async function createMeeting(cellId: string, formData: FormData) {
       cell_id: cellId,
       meeting_date: String(formData.get("meeting_date")),
       start_time: String(formData.get("start_time") ?? "") || null,
+      end_time: String(formData.get("end_time") ?? "") || null,
       location: String(formData.get("location") ?? "") || null,
       theme: String(formData.get("theme") ?? "") || null,
       duration_minutes: formData.get("duration_minutes")
@@ -41,6 +42,7 @@ export async function updateMeetingBasics(
     .update({
       meeting_date: String(formData.get("meeting_date")),
       start_time: String(formData.get("start_time") ?? "") || null,
+      end_time: String(formData.get("end_time") ?? "") || null,
       location: String(formData.get("location") ?? "") || null,
       theme: String(formData.get("theme") ?? "") || null,
       duration_minutes: formData.get("duration_minutes")

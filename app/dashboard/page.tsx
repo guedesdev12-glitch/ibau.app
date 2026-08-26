@@ -1,10 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
-import { CalendarDays, Users2, Shield, ImagePlus, ChevronRight, Clock, Sparkles, Church } from "lucide-react";
+import { CalendarDays, Users2, Shield, ImagePlus, ChevronRight, Clock, Sparkles, Church, CalendarClock } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/bottom-nav";
 import { MediaCarousel } from "@/components/media-carousel";
 import { TopBar } from "@/components/top-bar";
+import { WelcomeToast } from "@/components/welcome-toast";
 
 const WEEKDAYS = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
 
@@ -22,6 +23,7 @@ export default async function DashboardPage() {
   } = await supabase.auth.getUser();
 
   const [
+    { data: profile },
     { data: church },
     { data: services },
     { data: events },
@@ -31,6 +33,7 @@ export default async function DashboardPage() {
     { data: canManageMembers },
     { data: canManageChurch },
   ] = await Promise.all([
+    supabase.from("profiles").select("full_name").eq("id", user!.id).single(),
     supabase.from("church_settings").select("*").single(),
     supabase.from("church_services").select("*").eq("active", true).order("weekday"),
     supabase
@@ -75,9 +78,45 @@ export default async function DashboardPage() {
       href: "/dashboard/eventos",
     }));
 
+  // Encontro de sábado — atalho para líderes/co-líderes da célula
+  const { data: ledCell } = await supabase
+    .from("cells")
+    .select("id, name")
+    .or(`leader_id.eq.${user!.id},co_leader_id.eq.${user!.id}`)
+    .limit(1)
+    .maybeSingle();
+
+  let saturdayMeetingHref: string | null = null;
+  let saturdayDateLabel = "";
+  if (ledCell) {
+    const now = new Date();
+    const daysUntilSaturday = (6 - now.getDay() + 7) % 7;
+    const nextSaturday = new Date(now);
+    nextSaturday.setDate(now.getDate() + daysUntilSaturday);
+    const nextSaturdayStr = nextSaturday.toISOString().slice(0, 10);
+    saturdayDateLabel = nextSaturday.toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "short",
+    });
+
+    const { data: existingMeeting } = await supabase
+      .from("cell_meetings")
+      .select("id")
+      .eq("cell_id", ledCell.id)
+      .eq("meeting_date", nextSaturdayStr)
+      .maybeSingle();
+
+    saturdayMeetingHref = existingMeeting
+      ? `/dashboard/celulas/${ledCell.id}/encontros/${existingMeeting.id}`
+      : `/dashboard/celulas/${ledCell.id}/encontros/novo?date=${nextSaturdayStr}`;
+  }
+
+  const firstName = profile?.full_name?.split(" ")[0] ?? "";
+
   return (
     <>
       <TopBar />
+      <WelcomeToast firstName={firstName} />
       <main className="mx-auto max-w-3xl px-4 pb-28">
         <p className="pb-4 pt-4 text-sm text-neutral-500">{church?.name ?? "IBAU"}</p>
 
@@ -91,6 +130,28 @@ export default async function DashboardPage() {
             </div>
           }
         />
+
+        {saturdayMeetingHref && (
+          <Link
+            href={saturdayMeetingHref}
+            className="ibau-tile mt-5 flex items-center justify-between rounded-2xl bg-neutral-900 px-5 py-4 text-white shadow-[0_10px_28px_-12px_rgba(0,0,0,0.5)]"
+          >
+            <div className="flex items-center gap-3">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10">
+                <CalendarClock size={19} />
+              </span>
+              <div>
+                <p className="text-sm font-semibold leading-tight">
+                  Encontro de célula · {saturdayDateLabel}
+                </p>
+                <p className="text-xs text-white/50">
+                  Estudo da semana, equipe, visitantes e oferta
+                </p>
+              </div>
+            </div>
+            <ChevronRight size={18} className="text-white/60" />
+          </Link>
+        )}
 
         {/* Atalhos */}
         <section className="mt-6">

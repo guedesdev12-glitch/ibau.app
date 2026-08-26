@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CalendarDays, Shield, ImagePlus, ChevronRight, Grid2x2, Users } from "lucide-react";
+import { CalendarDays, Shield, ImagePlus, ChevronRight, Grid2x2, Users, BookOpen } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { logout } from "@/app/actions/auth";
 import { BottomNav } from "@/components/bottom-nav";
@@ -12,12 +12,13 @@ export default async function MenuPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const [{ data: profile }, { data: isDeveloper }, { data: canManageMembers }, { data: canManageChurch }, adminLevel] =
+  const [{ data: profile }, { data: isDeveloper }, { data: canManageMembers }, { data: canManageChurch }, { data: canManageStudies }, adminLevel] =
     await Promise.all([
       supabase.from("profiles").select("full_name, roles(name)").eq("id", user!.id).single(),
       supabase.rpc("is_developer"),
       supabase.rpc("has_permission", { p_key: "membros.manage" }),
       supabase.rpc("has_permission", { p_key: "igreja.manage" }),
+      supabase.rpc("has_permission", { p_key: "estudos.manage" }),
       isAdminLevel(),
     ]);
 
@@ -28,6 +29,7 @@ export default async function MenuPage() {
   const links = [
     adminLevel && { href: "/dashboard/admin/usuarios", label: "Painel de usuários", icon: Users },
     canManageMembers && { href: "/dashboard/membros", label: "Membros", icon: CalendarDays },
+    canManageStudies && { href: "/dashboard/admin/estudos", label: "Estudo semanal", icon: BookOpen },
     isDeveloper && { href: "/dashboard/admin/categorias", label: "Categorias & Permissões", icon: Shield },
     canManageChurch && { href: "/dashboard/admin/carrossel", label: "Carrossel da tela inicial", icon: ImagePlus },
   ].filter(Boolean) as { href: string; label: string; icon: typeof CalendarDays }[];
