@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Upload, Loader2 } from "lucide-react";
-import { compressImage } from "@/lib/image-compress";
+import { useCroppedImagePicker } from "@/components/use-cropped-image-picker";
 
 export function EventCreateForm() {
   const router = useRouter();
@@ -11,7 +11,7 @@ export function EventCreateForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-  const [fileName, setFileName] = useState<string | null>(null);
+  const { croppedFile, onSelect, modal } = useCroppedImagePicker(3 / 4);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -22,17 +22,14 @@ export function EventCreateForm() {
     try {
       const form = e.currentTarget;
       const raw = new FormData(form);
-      const posterInput = form.elements.namedItem("poster") as HTMLInputElement;
-      const originalPoster = posterInput.files?.[0];
 
       const formData = new FormData();
       for (const [key, value] of raw.entries()) {
         if (key === "poster") continue;
         formData.append(key, value);
       }
-      if (originalPoster) {
-        const compressed = await compressImage(originalPoster, 1200, 0.85);
-        formData.append("poster", compressed);
+      if (croppedFile) {
+        formData.append("poster", croppedFile);
       }
 
       const res = await fetch("/api/events/create", { method: "POST", body: formData });
@@ -50,7 +47,6 @@ export function EventCreateForm() {
 
       setSuccess(true);
       formRef.current?.reset();
-      setFileName(null);
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erro desconhecido ao criar o evento.");
@@ -112,15 +108,14 @@ export function EventCreateForm() {
       >
         <Upload size={20} className="text-neutral-400" />
         <span className="text-sm font-medium text-neutral-600">
-          {fileName ?? "Pôster do evento (opcional)"}
+          {croppedFile ? croppedFile.name : "Pôster do evento (opcional)"}
         </span>
         <input
           id="event-poster"
           type="file"
-          name="poster"
           accept="image/*"
           className="sr-only"
-          onChange={(e) => setFileName(e.currentTarget.files?.[0]?.name ?? null)}
+          onChange={onSelect}
         />
       </label>
 
@@ -132,6 +127,8 @@ export function EventCreateForm() {
         {isSubmitting && <Loader2 size={16} className="animate-spin" />}
         {isSubmitting ? "Publicando..." : "Publicar evento"}
       </button>
+
+      {modal}
     </form>
   );
 }

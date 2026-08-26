@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Upload, Loader2 } from "lucide-react";
-import { compressImage } from "@/lib/image-compress";
+import { useCroppedImagePicker } from "@/components/use-cropped-image-picker";
 
 const WEEKDAYS = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
 const GENERATIONS = ["Kids", "Adolescentes", "Jovens", "Adultos", "Todas as idades"];
@@ -15,9 +15,9 @@ export function CellCreateForm({ members }: { members: Member[] }) {
   const formRef = useRef<HTMLFormElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [fileName, setFileName] = useState<string | null>(null);
   const [leaderId, setLeaderId] = useState("");
   const [coLeaderId, setCoLeaderId] = useState("");
+  const { croppedFile, onSelect, modal } = useCroppedImagePicker(4 / 3);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -28,17 +28,13 @@ export function CellCreateForm({ members }: { members: Member[] }) {
       const form = e.currentTarget;
       const raw = new FormData(form);
 
-      const photoInput = form.elements.namedItem("photo") as HTMLInputElement;
-      const originalPhoto = photoInput.files?.[0];
-
       const formData = new FormData();
       for (const [key, value] of raw.entries()) {
         if (key === "photo") continue;
         formData.append(key, value);
       }
-      if (originalPhoto) {
-        const compressed = await compressImage(originalPhoto);
-        formData.append("photo", compressed);
+      if (croppedFile) {
+        formData.append("photo", croppedFile);
       }
 
       const res = await fetch("/api/cells/create", { method: "POST", body: formData });
@@ -199,15 +195,14 @@ export function CellCreateForm({ members }: { members: Member[] }) {
         >
           <Upload size={20} className="text-neutral-400" />
           <span className="text-sm font-medium text-neutral-600">
-            {fileName ?? "Toque para escolher uma foto"}
+            {croppedFile ? croppedFile.name : "Toque para escolher uma foto"}
           </span>
           <input
             id="cell-photo"
             type="file"
-            name="photo"
             accept="image/*"
             className="sr-only"
-            onChange={(e) => setFileName(e.currentTarget.files?.[0]?.name ?? null)}
+            onChange={onSelect}
           />
         </label>
       </div>
@@ -220,6 +215,8 @@ export function CellCreateForm({ members }: { members: Member[] }) {
         {isSubmitting && <Loader2 size={16} className="animate-spin" />}
         {isSubmitting ? "Criando..." : "Criar célula"}
       </button>
+
+      {modal}
     </form>
   );
 }

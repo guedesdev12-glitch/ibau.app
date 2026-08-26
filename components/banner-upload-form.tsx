@@ -3,45 +3,35 @@
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ImagePlus, Upload, Loader2 } from "lucide-react";
-import { compressImage } from "@/lib/image-compress";
+import { useCroppedImagePicker } from "@/components/use-cropped-image-picker";
 
 export function BannerUploadForm() {
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [statusText, setStatusText] = useState("Enviando...");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-  const [fileName, setFileName] = useState<string | null>(null);
+  const { croppedFile, onSelect, modal, reset } = useCroppedImagePicker(16 / 10);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
     setSuccess(false);
-    setIsSubmitting(true);
 
+    if (!croppedFile) {
+      setError("Selecione e ajuste uma imagem.");
+      return;
+    }
+
+    setIsSubmitting(true);
     try {
       const form = e.currentTarget;
-      const fileInput = form.elements.namedItem("image") as HTMLInputElement;
-      const original = fileInput.files?.[0];
-
-      if (!original) {
-        throw new Error("Selecione uma imagem.");
-      }
-
-      setStatusText("Preparando imagem...");
-      const compressed = await compressImage(original);
-
       const formData = new FormData();
-      formData.append("image", compressed);
+      formData.append("image", croppedFile);
       const titleInput = form.elements.namedItem("title") as HTMLInputElement;
       formData.append("title", titleInput?.value ?? "");
 
-      setStatusText("Enviando...");
-      const res = await fetch("/api/banners/upload", {
-        method: "POST",
-        body: formData,
-      });
+      const res = await fetch("/api/banners/upload", { method: "POST", body: formData });
 
       let body: { ok?: boolean; error?: string } = {};
       try {
@@ -56,7 +46,7 @@ export function BannerUploadForm() {
 
       setSuccess(true);
       formRef.current?.reset();
-      setFileName(null);
+      reset();
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erro desconhecido ao enviar a imagem.");
@@ -86,17 +76,17 @@ export function BannerUploadForm() {
       >
         <Upload size={24} className="text-neutral-400" />
         <span className="text-sm font-medium text-neutral-600">
-          {fileName ?? "Toque para escolher uma foto"}
+          {croppedFile ? croppedFile.name : "Toque para escolher uma foto"}
         </span>
-        <span className="text-xs text-neutral-400">JPG ou PNG — a foto é ajustada automaticamente</span>
+        <span className="text-xs text-neutral-400">
+          {croppedFile ? "Toque para trocar" : "Você poderá ajustar o enquadramento"}
+        </span>
         <input
           id="banner-image"
           type="file"
-          name="image"
           accept="image/*"
-          required
           className="sr-only"
-          onChange={(e) => setFileName(e.currentTarget.files?.[0]?.name ?? null)}
+          onChange={onSelect}
         />
       </label>
 
@@ -113,8 +103,10 @@ export function BannerUploadForm() {
         className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg bg-neutral-900 py-2.5 text-sm font-medium text-white disabled:opacity-60"
       >
         {isSubmitting && <Loader2 size={16} className="animate-spin" />}
-        {isSubmitting ? statusText : "Publicar no carrossel"}
+        {isSubmitting ? "Enviando..." : "Publicar no carrossel"}
       </button>
+
+      {modal}
     </form>
   );
 }
