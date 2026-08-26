@@ -96,6 +96,12 @@ export async function POST(request: Request) {
     );
   }
 
+  // Gera automaticamente os encontros de sábado do próximo ano
+  await supabase.rpc("ensure_cell_saturdays", {
+    p_cell_id: cell.id,
+    p_months: 12,
+  });
+
   const memberRows: { cell_id: string; profile_id: string; role: "lider" | "anfitriao" | "membro" }[] = [];
   if (leaderId) memberRows.push({ cell_id: cell.id, profile_id: leaderId, role: "lider" });
   if (coLeaderId) memberRows.push({ cell_id: cell.id, profile_id: coLeaderId, role: "anfitriao" });

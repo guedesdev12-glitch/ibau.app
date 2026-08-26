@@ -105,6 +105,9 @@ export default async function DashboardPage() {
       month: "short",
     });
 
+    // Garante que os sábados existam (idempotente) e busca o deste sábado
+    await supabase.rpc("ensure_cell_saturdays", { p_cell_id: ledCell.id, p_months: 12 });
+
     const { data: existingMeeting } = await supabase
       .from("cell_meetings")
       .select("id")
@@ -114,7 +117,7 @@ export default async function DashboardPage() {
 
     saturdayMeetingHref = existingMeeting
       ? `/dashboard/celulas/${ledCell.id}/encontros/${existingMeeting.id}`
-      : `/dashboard/celulas/${ledCell.id}/encontros/novo?date=${nextSaturdayStr}`;
+      : `/dashboard/celulas/${ledCell.id}/encontros`;
   }
 
   const firstName = profile?.full_name?.split(" ")[0] ?? "";

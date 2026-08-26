@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Users2, UserPlus, Heart, CalendarDays, Plus, ChevronRight, MapPin } from "lucide-react";
+import { Users2, UserPlus, Heart, CalendarDays, ClipboardList, ChevronRight, MapPin } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/bottom-nav";
 import { TopBar } from "@/components/top-bar";
@@ -106,10 +106,10 @@ export default async function CelulaDashboardPage({
         </div>
 
         <Link
-          href={`/dashboard/celulas/${id}/encontros/novo`}
-          className="ibau-tile flex items-center justify-center gap-2 rounded-xl bg-neutral-900 py-3 text-sm font-medium text-white shadow-[0_10px_24px_-12px_rgba(0,0,0,0.5)]"
+          href={`/dashboard/celulas/${id}/encontros`}
+          className="ibau-tile flex items-center justify-center gap-2 rounded-xl bg-[#14532d] py-3 text-sm font-medium text-white shadow-[0_10px_24px_-12px_rgba(20,83,45,0.5)]"
         >
-          <Plus size={18} /> Novo encontro
+          <ClipboardList size={18} /> Registrar reunião
         </Link>
 
         {nextMeeting && (

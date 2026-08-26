@@ -620,6 +620,10 @@ export type Database = {
           visitantes_count: number
         }[]
       }
+      ensure_cell_saturdays: {
+        Args: { p_cell_id: string; p_from?: string; p_months?: number }
+        Returns: number
+      }
       has_permission: { Args: { p_key: string }; Returns: boolean }
       is_cell_leader: { Args: { target_cell_id: string }; Returns: boolean }
       is_cell_member: { Args: { target_cell_id: string }; Returns: boolean }
