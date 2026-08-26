@@ -24,12 +24,21 @@ export function BottomNav() {
             <li key={href}>
               <Link
                 href={href}
-                className={`flex flex-col items-center gap-0.5 rounded-full px-4 py-2 text-[10px] font-medium ${
-                  active ? "bg-neutral-900 text-white" : "text-neutral-500"
-                }`}
+                className="flex flex-col items-center gap-1 rounded-full px-4 py-2 text-[10px] font-medium"
               >
-                <Icon size={18} strokeWidth={active ? 2.2 : 1.8} />
-                {label}
+                <span
+                  className={`flex h-6 w-6 items-center justify-center rounded-full transition-colors ${
+                    active ? "bg-neutral-100 text-neutral-900" : "text-neutral-400"
+                  }`}
+                >
+                  <Icon size={18} strokeWidth={active ? 2.4 : 1.8} />
+                </span>
+                <span className={active ? "text-neutral-900" : "text-neutral-400"}>
+                  {label}
+                </span>
+                <span
+                  className={`h-1 w-1 rounded-full ${active ? "bg-neutral-900" : "bg-transparent"}`}
+                />
               </Link>
             </li>
           );
