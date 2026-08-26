@@ -70,7 +70,7 @@ export default async function ReunioesPage({
   return (
     <>
       <TopBar />
-      <main className="mx-auto max-w-3xl px-4 pb-28 pt-6">
+      <main className="mx-auto max-w-3xl px-4 pb-40 pt-6">
         <div className="mb-5 flex items-center gap-3">
           <Link href={`/dashboard/celulas/${id}`}>
             <ArrowLeft size={20} />

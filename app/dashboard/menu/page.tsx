@@ -37,7 +37,7 @@ export default async function MenuPage() {
   return (
     <>
       <TopBar />
-      <main className="mx-auto max-w-3xl px-4 pb-28 pt-6">
+      <main className="mx-auto max-w-3xl px-4 pb-40 pt-6">
         <h1 className="ibau-section-title mb-5 text-lg font-semibold">
           <span className="ibau-section-icon"><Grid2x2 size={15} /></span>
           Menu

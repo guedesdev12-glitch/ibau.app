@@ -85,7 +85,7 @@ export default async function CelulaDashboardPage({
   return (
     <>
       <TopBar />
-      <main className="mx-auto max-w-3xl px-4 pb-28 pt-6">
+      <main className="mx-auto max-w-3xl px-4 pb-40 pt-6">
         <div className="mb-5 flex items-center gap-3">
           <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-2xl bg-neutral-100">
             {cell.photo_url ? (

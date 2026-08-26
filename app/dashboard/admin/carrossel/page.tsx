@@ -21,7 +21,7 @@ export default async function CarrosselAdminPage() {
     .order("position");
 
   return (
-    <main className="mx-auto max-w-3xl px-4 pb-24 pt-6">
+    <main className="mx-auto max-w-3xl px-4 pb-40 pt-6">
       <div className="mb-6 flex items-center gap-3">
         <Link href="/dashboard">
           <ArrowLeft size={20} />

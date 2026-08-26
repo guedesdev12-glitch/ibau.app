@@ -126,7 +126,7 @@ export default async function DashboardPage() {
     <>
       <TopBar />
       <WelcomeToast firstName={firstName} />
-      <main className="mx-auto max-w-3xl px-4 pb-28">
+      <main className="mx-auto max-w-3xl px-4 pb-40">
         <p className="pb-4 pt-4 text-sm text-neutral-500">{church?.name ?? "IBAU"}</p>
 
         <MediaCarousel
@@ -143,22 +143,22 @@ export default async function DashboardPage() {
         {saturdayMeetingHref && (
           <Link
             href={saturdayMeetingHref}
-            className="ibau-tile mt-5 flex items-center justify-between rounded-2xl bg-neutral-900 px-5 py-4 text-white shadow-[0_10px_28px_-12px_rgba(0,0,0,0.5)]"
+            className="mt-5 flex items-center justify-between rounded-2xl bg-[#14532d] px-5 py-4 shadow-[0_10px_28px_-12px_rgba(20,83,45,0.6)]"
           >
             <div className="flex items-center gap-3">
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10">
-                <CalendarClock size={19} />
+              <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-white/15 text-white">
+                <CalendarClock size={20} />
               </span>
               <div>
-                <p className="text-sm font-semibold leading-tight">
+                <p className="text-[15px] font-semibold leading-tight text-white">
                   Encontro de célula · {saturdayDateLabel}
                 </p>
-                <p className="text-xs text-white/50">
+                <p className="mt-0.5 text-xs text-white/70">
                   Estudo da semana, equipe, visitantes e oferta
                 </p>
               </div>
             </div>
-            <ChevronRight size={18} className="text-white/60" />
+            <ChevronRight size={18} className="flex-shrink-0 text-white/70" />
           </Link>
         )}
 

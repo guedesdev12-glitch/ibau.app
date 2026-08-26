@@ -38,11 +38,10 @@ select {
   color: inherit;
 }
 
-/* Feedback de toque próprio: leve redução de opacidade em vez de
-   escurecer o fundo (que apagava o texto). */
-button:active,
-a:active,
-[role="button"]:active {
+/* Feedback de toque próprio: aplicado só via classe, para não afetar
+   cards e links de conteúdo (no iOS o :active fica preso durante o
+   scroll, o que apagava o texto de blocos escuros). */
+.ibau-pressable:active {
   opacity: 0.85;
 }
 
@@ -80,5 +79,5 @@ a {
 }
 
 .ibau-tile {
-  transition: opacity 0.15s ease, box-shadow 0.15s ease;
+  transition: box-shadow 0.15s ease;
 }
