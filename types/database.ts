@@ -82,13 +82,18 @@ export type Database = {
           created_by: string | null
           duration_minutes: number | null
           end_time: string | null
+          host_id: string | null
           id: string
           location: string | null
           meeting_date: string
           notes: string | null
           offering_amount: number | null
           offering_type: Database["public"]["Enums"]["offering_type"] | null
+          rating: number | null
+          registered_at: string | null
           start_time: string | null
+          status: Database["public"]["Enums"]["meeting_status"]
+          study_id: string | null
           theme: string | null
           updated_at: string
         }
@@ -98,13 +103,18 @@ export type Database = {
           created_by?: string | null
           duration_minutes?: number | null
           end_time?: string | null
+          host_id?: string | null
           id?: string
           location?: string | null
           meeting_date: string
           notes?: string | null
           offering_amount?: number | null
           offering_type?: Database["public"]["Enums"]["offering_type"] | null
+          rating?: number | null
+          registered_at?: string | null
           start_time?: string | null
+          status?: Database["public"]["Enums"]["meeting_status"]
+          study_id?: string | null
           theme?: string | null
           updated_at?: string
         }
@@ -114,13 +124,18 @@ export type Database = {
           created_by?: string | null
           duration_minutes?: number | null
           end_time?: string | null
+          host_id?: string | null
           id?: string
           location?: string | null
           meeting_date?: string
           notes?: string | null
           offering_amount?: number | null
           offering_type?: Database["public"]["Enums"]["offering_type"] | null
+          rating?: number | null
+          registered_at?: string | null
           start_time?: string | null
+          status?: Database["public"]["Enums"]["meeting_status"]
+          study_id?: string | null
           theme?: string | null
           updated_at?: string
         }
@@ -137,6 +152,20 @@ export type Database = {
             columns: ["created_by"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cell_meetings_host_id_fkey"
+            columns: ["host_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cell_meetings_study_id_fkey"
+            columns: ["study_id"]
+            isOneToOne: false
+            referencedRelation: "weekly_studies"
             referencedColumns: ["id"]
           },
         ]
@@ -598,6 +627,7 @@ export type Database = {
     }
     Enums: {
       cell_member_role: "lider" | "anfitriao" | "membro"
+      meeting_status: "a_realizar" | "registrada" | "nao_houve"
       meeting_team_role: "lider" | "co_lider" | "auxiliar"
       offering_type: "voluntaria" | "dizimo" | "oferta_especial"
     }
@@ -728,6 +758,7 @@ export const Constants = {
   public: {
     Enums: {
       cell_member_role: ["lider", "anfitriao", "membro"],
+      meeting_status: ["a_realizar", "registrada", "nao_houve"],
       meeting_team_role: ["lider", "co_lider", "auxiliar"],
       offering_type: ["voluntaria", "dizimo", "oferta_especial"],
     },
