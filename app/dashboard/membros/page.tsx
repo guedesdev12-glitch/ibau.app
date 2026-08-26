@@ -3,6 +3,7 @@ import { updateMemberRole } from "@/app/actions/members";
 import { BottomNav } from "@/components/bottom-nav";
 import { RoleSelect } from "@/components/role-select";
 import { TopBar } from "@/components/top-bar";
+import { Users } from "lucide-react";
 
 export default async function MembrosPage() {
   const supabase = await createClient();
@@ -20,7 +21,10 @@ export default async function MembrosPage() {
     <>
       <TopBar />
       <main className="mx-auto max-w-3xl px-4 pb-28 pt-6">
-        <h1 className="mb-6 text-lg font-semibold">Membros</h1>
+        <h1 className="ibau-section-title mb-6 text-lg font-semibold">
+          <span className="ibau-section-icon"><Users size={15} /></span>
+          Membros
+        </h1>
 
       <ul className="divide-y divide-neutral-200 rounded-xl border border-neutral-200">
         {members?.map((member) => {

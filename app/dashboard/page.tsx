@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { CalendarDays, Users2, Shield, ImagePlus, ChevronRight, Clock } from "lucide-react";
+import { CalendarDays, Users2, Shield, ImagePlus, ChevronRight, Clock, Sparkles, Church } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/bottom-nav";
 import { MediaCarousel } from "@/components/media-carousel";
@@ -94,7 +94,10 @@ export default async function DashboardPage() {
 
         {/* Atalhos */}
         <section className="mt-6">
-          <p className="mb-3 text-base font-semibold">Atalhos</p>
+          <p className="ibau-section-title mb-3 text-base font-semibold">
+            <span className="ibau-section-icon"><Sparkles size={14} /></span>
+            Atalhos
+          </p>
           <div className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-1">
             {QUICK_LINKS.filter((l) => !l.perm || permMap[l.perm]).map(
               ({ href, label, icon: Icon }) => (
@@ -118,17 +121,22 @@ export default async function DashboardPage() {
         {/* Programação */}
         <section className="mt-6">
           <div className="mb-3 flex items-center justify-between">
-            <p className="text-base font-semibold">Programação</p>
+            <p className="ibau-section-title text-base font-semibold">
+              <span className="ibau-section-icon"><Clock size={14} /></span>
+              Programação
+            </p>
           </div>
           {services && services.length > 0 ? (
             <div className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-1">
               {services.map((s) => (
                 <div key={s.id} className="ibau-card w-40 flex-shrink-0 p-4">
+                  <span className="mb-2 flex h-8 w-8 items-center justify-center rounded-lg bg-neutral-900 text-white">
+                    <Church size={15} />
+                  </span>
                   <p className="text-sm font-semibold leading-tight">{s.label}</p>
-                  <p className="mt-2 flex items-center gap-1.5 text-xs text-neutral-500">
-                    <Clock size={13} /> {WEEKDAYS[s.weekday]}
+                  <p className="mt-1.5 text-xs text-neutral-500">
+                    {WEEKDAYS[s.weekday]} · {s.start_time.slice(0, 5)}
                   </p>
-                  <p className="text-xs text-neutral-500">{s.start_time.slice(0, 5)}</p>
                 </div>
               ))}
             </div>
@@ -142,7 +150,10 @@ export default async function DashboardPage() {
         {/* Eventos */}
         <section className="mt-6">
           <div className="mb-3 flex items-center justify-between">
-            <p className="text-base font-semibold">Eventos</p>
+            <p className="ibau-section-title text-base font-semibold">
+              <span className="ibau-section-icon"><CalendarDays size={14} /></span>
+              Eventos
+            </p>
             <Link href="/dashboard/eventos" className="flex items-center text-xs text-neutral-500">
               Ver mais <ChevronRight size={14} />
             </Link>
@@ -161,7 +172,10 @@ export default async function DashboardPage() {
         {/* Células */}
         <section className="mt-6">
           <div className="mb-3 flex items-center justify-between">
-            <p className="text-base font-semibold">Células</p>
+            <p className="ibau-section-title text-base font-semibold">
+              <span className="ibau-section-icon"><Users2 size={14} /></span>
+              Células
+            </p>
             <Link href="/dashboard/celulas" className="flex items-center text-xs text-neutral-500">
               Ver mais <ChevronRight size={14} />
             </Link>
@@ -188,7 +202,10 @@ export default async function DashboardPage() {
                     <div className="p-2.5">
                       <p className="text-xs font-semibold leading-tight">{c.name}</p>
                       {leader?.full_name && (
-                        <p className="mt-1 text-[11px] text-neutral-500">{leader.full_name}</p>
+                        <p className="mt-1 flex items-center gap-1 text-[11px] text-neutral-500">
+                          <span className="inline-block h-1 w-1 rounded-full bg-neutral-400" />
+                          {leader.full_name}
+                        </p>
                       )}
                     </div>
                   </Link>

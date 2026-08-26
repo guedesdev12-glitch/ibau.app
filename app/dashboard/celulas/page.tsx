@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ChevronRight, MapPin } from "lucide-react";
+import { ChevronRight, MapPin, Users2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { CellCreateForm } from "@/components/cell-create-form";
 import { BottomNav } from "@/components/bottom-nav";
@@ -26,7 +26,10 @@ export default async function CelulasPage() {
     <>
       <TopBar />
       <main className="mx-auto max-w-3xl px-4 pb-28 pt-6">
-        <h1 className="mb-6 text-lg font-semibold">Células</h1>
+        <h1 className="ibau-section-title mb-6 text-lg font-semibold">
+          <span className="ibau-section-icon"><Users2 size={15} /></span>
+          Células
+        </h1>
 
       <div className="mb-6 space-y-3">
         {cells?.map((cell) => {

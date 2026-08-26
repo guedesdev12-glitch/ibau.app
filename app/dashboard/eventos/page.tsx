@@ -30,7 +30,10 @@ export default async function EventosPage() {
     <>
       <TopBar />
       <main className="mx-auto max-w-3xl px-4 pb-28 pt-6">
-        <h1 className="mb-5 text-lg font-semibold">Eventos</h1>
+        <h1 className="ibau-section-title mb-5 text-lg font-semibold">
+          <span className="ibau-section-icon"><CalendarDays size={15} /></span>
+          Eventos
+        </h1>
 
       {canManage && <div className="mb-6"><EventCreateForm /></div>}
 

@@ -26,10 +26,28 @@ a {
 }
 
 .ibau-card {
-  background: #fff;
+  background: linear-gradient(180deg, #ffffff 0%, #fafaf9 100%);
   border-radius: 1.25rem;
   border: 1px solid rgba(20, 37, 29, 0.08);
   box-shadow: var(--ibau-card-shadow);
+}
+
+.ibau-section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ibau-section-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 0.6rem;
+  background: linear-gradient(180deg, #262626 0%, #0a0a0a 100%);
+  color: #fff;
+  box-shadow: 0 3px 8px -3px rgba(0, 0, 0, 0.5);
 }
 
 .ibau-tile {
