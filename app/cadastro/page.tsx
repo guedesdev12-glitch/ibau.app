@@ -50,15 +50,13 @@ export default async function CadastroPage({
 
   return (
     <main className="relative flex min-h-screen items-center justify-center overflow-hidden px-4 py-10">
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0d3a20] via-[#0a2c18] to-[#050f0a]" />
-      <div className="pointer-events-none absolute -top-24 -left-16 h-72 w-72 rounded-full bg-[#f0a922]/25 blur-[90px]" />
-      <div className="pointer-events-none absolute top-1/3 -right-20 h-80 w-80 rounded-full bg-[#d5342e]/20 blur-[100px]" />
-      <div className="pointer-events-none absolute -bottom-28 left-1/4 h-72 w-72 rounded-full bg-[#1c5aa6]/20 blur-[100px]" />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.06),transparent_60%)]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#123f26] via-[#0a2c18] to-[#04100a]" />
+      <div className="pointer-events-none absolute -top-40 left-1/2 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-[#f0a922]/[0.12] blur-[110px]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.05),transparent_55%)]" />
 
       <div className="relative w-full max-w-sm space-y-7">
         <div className="text-center">
-          <Image src="/logo-v2.png" alt="IBAU" width={76} height={76} className="mx-auto mb-3" />
+          <Image src="/logo-mark-v2.png" alt="IBAU" width={72} height={72} className="mx-auto mb-3" />
           <h1 className="text-2xl font-semibold text-white">Criar conta</h1>
           <p className="mt-1 text-sm text-white/60">Cadastre-se no IBAU App</p>
         </div>
