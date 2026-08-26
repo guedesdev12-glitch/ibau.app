@@ -1,9 +1,10 @@
 import { redirect } from "next/navigation";
-import { BookOpen, Trash2 } from "lucide-react";
+import { BookOpen, Trash2, FileText } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
-import { createWeeklyStudy, deleteWeeklyStudy } from "@/app/actions/studies";
+import { deleteWeeklyStudy } from "@/app/actions/studies";
 import { TopBar } from "@/components/top-bar";
 import { BottomNav } from "@/components/bottom-nav";
+import { StudyCreateForm } from "@/components/study-create-form";
 
 export default async function EstudosAdminPage() {
   const supabase = await createClient();
@@ -29,39 +30,9 @@ export default async function EstudosAdminPage() {
           Estudo semanal
         </h1>
 
-        <form action={createWeeklyStudy} className="ibau-card mb-6 space-y-3 p-5">
-          <p className="text-sm font-semibold">Publicar novo estudo</p>
-          <input
-            type="date"
-            name="study_date"
-            required
-            className="w-full rounded-lg border border-neutral-200 px-3 py-2.5 text-sm"
-          />
-          <input
-            name="title"
-            required
-            placeholder="Título do estudo"
-            className="w-full rounded-lg border border-neutral-200 px-3 py-2.5 text-sm"
-          />
-          <textarea
-            name="content"
-            required
-            rows={6}
-            placeholder="Conteúdo do estudo (texto, tópicos, perguntas...)"
-            className="w-full rounded-lg border border-neutral-200 px-3 py-2.5 text-sm"
-          />
-          <input
-            name="file_url"
-            placeholder="Link do material (opcional — PDF, vídeo, etc.)"
-            className="w-full rounded-lg border border-neutral-200 px-3 py-2.5 text-sm"
-          />
-          <button
-            type="submit"
-            className="w-full rounded-lg bg-neutral-900 py-2.5 text-sm font-medium text-white"
-          >
-            Publicar
-          </button>
-        </form>
+        <div className="mb-6">
+          <StudyCreateForm />
+        </div>
 
         <div className="space-y-2">
           {studies?.map((s) => (
@@ -79,7 +50,19 @@ export default async function EstudosAdminPage() {
                   </button>
                 </form>
               </div>
-              <p className="mt-2 line-clamp-2 text-xs text-neutral-500">{s.content}</p>
+              {s.content && (
+                <p className="mt-2 line-clamp-2 text-xs text-neutral-500">{s.content}</p>
+              )}
+              {s.file_url && (
+                <a
+                  href={s.file_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-neutral-700 underline"
+                >
+                  <FileText size={12} /> Ver PDF
+                </a>
+              )}
             </div>
           ))}
           {(!studies || studies.length === 0) && (

@@ -1,11 +1,12 @@
 import Link from "next/link";
 import Image from "next/image";
-import { CalendarDays, Users2, Shield, ImagePlus, ChevronRight, Clock, Sparkles, Church, CalendarClock } from "lucide-react";
+import { CalendarDays, Users2, Shield, ImagePlus, ChevronRight, Clock, Sparkles, Church, CalendarClock, BookOpen, FileText } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/bottom-nav";
 import { MediaCarousel } from "@/components/media-carousel";
 import { TopBar } from "@/components/top-bar";
 import { WelcomeToast } from "@/components/welcome-toast";
+import { nextSaturday } from "@/lib/saturdays";
 
 const WEEKDAYS = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
 
@@ -79,6 +80,16 @@ export default async function DashboardPage() {
     }));
 
   // Encontro de sábado — atalho para líderes/co-líderes da célula
+  const nextSaturdayStr = nextSaturday();
+
+  const { data: currentStudy } = await supabase
+    .from("weekly_studies")
+    .select("id, title, content, file_url, study_date")
+    .lte("study_date", nextSaturdayStr)
+    .order("study_date", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
   const { data: ledCell } = await supabase
     .from("cells")
     .select("id, name")
@@ -89,12 +100,7 @@ export default async function DashboardPage() {
   let saturdayMeetingHref: string | null = null;
   let saturdayDateLabel = "";
   if (ledCell) {
-    const now = new Date();
-    const daysUntilSaturday = (6 - now.getDay() + 7) % 7;
-    const nextSaturday = new Date(now);
-    nextSaturday.setDate(now.getDate() + daysUntilSaturday);
-    const nextSaturdayStr = nextSaturday.toISOString().slice(0, 10);
-    saturdayDateLabel = nextSaturday.toLocaleDateString("pt-BR", {
+    saturdayDateLabel = new Date(nextSaturdayStr + "T00:00:00").toLocaleDateString("pt-BR", {
       day: "2-digit",
       month: "short",
     });
@@ -151,6 +157,31 @@ export default async function DashboardPage() {
             </div>
             <ChevronRight size={18} className="text-white/60" />
           </Link>
+        )}
+
+        {currentStudy && (
+          <section className="ibau-card mt-5 p-4">
+            <p className="ibau-section-title mb-1 text-xs font-semibold uppercase tracking-wide text-neutral-400">
+              <span className="ibau-section-icon"><BookOpen size={12} /></span>
+              Estudo da semana
+            </p>
+            <p className="text-sm font-semibold">{currentStudy.title}</p>
+            {currentStudy.content && (
+              <p className="mt-1 line-clamp-3 text-xs text-neutral-500">
+                {currentStudy.content}
+              </p>
+            )}
+            {currentStudy.file_url && (
+              <a
+                href={currentStudy.file_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-neutral-900 px-3 py-1.5 text-xs font-medium text-white"
+              >
+                <FileText size={12} /> Abrir PDF
+              </a>
+            )}
+          </section>
         )}
 
         {/* Atalhos */}
