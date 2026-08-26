@@ -34,8 +34,16 @@ export async function POST(request: Request) {
   }
 
   const startTime = String(formData.get("start_time") ?? "") || null;
+  const endTime = String(formData.get("end_time") ?? "") || null;
   const location = String(formData.get("location") ?? "") || null;
+  const subtitle = String(formData.get("subtitle") ?? "") || null;
   const description = String(formData.get("description") ?? "") || null;
+  const isFree = formData.get("is_free") !== "pago";
+  const rawPrice = String(formData.get("price") ?? "").replace(",", ".");
+  const price = isFree ? null : Number(rawPrice) || 0;
+  const rawCapacity = String(formData.get("capacity") ?? "");
+  const capacity = rawCapacity ? Number(rawCapacity) : null;
+  const registrationDeadline = String(formData.get("registration_deadline") ?? "") || null;
   const poster = formData.get("poster");
 
   let posterUrl: string | null = null;
@@ -68,11 +76,17 @@ export async function POST(request: Request) {
 
   const { error: insertError } = await supabase.from("events").insert({
     title,
+    subtitle,
     event_date: eventDate,
     start_time: startTime,
+    end_time: endTime,
     location,
     description,
     poster_url: posterUrl,
+    is_free: isFree,
+    price,
+    capacity,
+    registration_deadline: registrationDeadline,
     created_by: user.id,
   });
 

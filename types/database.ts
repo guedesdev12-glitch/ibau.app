@@ -326,38 +326,106 @@ export type Database = {
         }
         Relationships: []
       }
+      event_tickets: {
+        Row: {
+          checked_in_at: string | null
+          code: string
+          created_at: string
+          event_id: string
+          id: string
+          profile_id: string
+          quantity: number
+          status: Database["public"]["Enums"]["ticket_status"]
+          total_price: number
+          unit_price: number
+        }
+        Insert: {
+          checked_in_at?: string | null
+          code: string
+          created_at?: string
+          event_id: string
+          id?: string
+          profile_id: string
+          quantity?: number
+          status?: Database["public"]["Enums"]["ticket_status"]
+          total_price?: number
+          unit_price?: number
+        }
+        Update: {
+          checked_in_at?: string | null
+          code?: string
+          created_at?: string
+          event_id?: string
+          id?: string
+          profile_id?: string
+          quantity?: number
+          status?: Database["public"]["Enums"]["ticket_status"]
+          total_price?: number
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_tickets_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       events: {
         Row: {
+          capacity: number | null
           created_at: string
           created_by: string | null
           description: string | null
+          end_time: string | null
           event_date: string
           id: string
+          is_free: boolean
           location: string | null
           poster_url: string | null
+          price: number | null
+          registration_deadline: string | null
+          registration_open: boolean
           start_time: string | null
+          subtitle: string | null
           title: string
         }
         Insert: {
+          capacity?: number | null
           created_at?: string
           created_by?: string | null
           description?: string | null
+          end_time?: string | null
           event_date: string
           id?: string
+          is_free?: boolean
           location?: string | null
           poster_url?: string | null
+          price?: number | null
+          registration_deadline?: string | null
+          registration_open?: boolean
           start_time?: string | null
+          subtitle?: string | null
           title: string
         }
         Update: {
+          capacity?: number | null
           created_at?: string
           created_by?: string | null
           description?: string | null
+          end_time?: string | null
           event_date?: string
           id?: string
+          is_free?: boolean
           location?: string | null
           poster_url?: string | null
+          price?: number | null
+          registration_deadline?: string | null
+          registration_open?: boolean
           start_time?: string | null
+          subtitle?: string | null
           title?: string
         }
         Relationships: [
@@ -764,6 +832,7 @@ export type Database = {
         Args: { p_cell_id: string; p_from?: string; p_months?: number }
         Returns: number
       }
+      event_spots_left: { Args: { p_event_id: string }; Returns: number }
       has_permission: { Args: { p_key: string }; Returns: boolean }
       is_cell_leader: { Args: { target_cell_id: string }; Returns: boolean }
       is_cell_member: { Args: { target_cell_id: string }; Returns: boolean }
@@ -774,6 +843,7 @@ export type Database = {
       meeting_status: "a_realizar" | "registrada" | "nao_houve"
       meeting_team_role: "lider" | "co_lider" | "auxiliar"
       offering_type: "voluntaria" | "dizimo" | "oferta_especial"
+      ticket_status: "pendente" | "confirmado" | "cancelado"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -905,6 +975,7 @@ export const Constants = {
       meeting_status: ["a_realizar", "registrada", "nao_houve"],
       meeting_team_role: ["lider", "co_lider", "auxiliar"],
       offering_type: ["voluntaria", "dizimo", "oferta_especial"],
+      ticket_status: ["pendente", "confirmado", "cancelado"],
     },
   },
 } as const
