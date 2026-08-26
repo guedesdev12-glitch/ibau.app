@@ -52,7 +52,7 @@ export function AvatarButton({
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
-        className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-white/15 text-sm font-semibold text-white ring-2 ring-white/20"
+        className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-white/15 text-sm font-semibold text-white shadow-[0_2px_6px_rgba(0,0,0,0.3)] ring-2 ring-white/25"
       >
         {preview ? (
           <Image src={preview} alt="Sua foto" fill className="object-cover" />

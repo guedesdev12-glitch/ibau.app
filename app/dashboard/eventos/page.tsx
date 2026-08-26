@@ -3,6 +3,7 @@ import { CalendarDays, MapPin } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/bottom-nav";
 import { EventCreateForm } from "@/components/event-create-form";
+import { TopBar } from "@/components/top-bar";
 
 const MONTHS = [
   "Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
@@ -26,8 +27,10 @@ export default async function EventosPage() {
   ]);
 
   return (
-    <main className="mx-auto max-w-3xl px-4 pb-28 pt-6">
-      <h1 className="mb-5 text-lg font-semibold">Eventos</h1>
+    <>
+      <TopBar />
+      <main className="mx-auto max-w-3xl px-4 pb-28 pt-6">
+        <h1 className="mb-5 text-lg font-semibold">Eventos</h1>
 
       {canManage && <div className="mb-6"><EventCreateForm /></div>}
 
@@ -68,6 +71,7 @@ export default async function EventosPage() {
       </div>
 
       <BottomNav />
-    </main>
+      </main>
+    </>
   );
 }

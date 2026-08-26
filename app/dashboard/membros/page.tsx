@@ -1,9 +1,8 @@
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { updateMemberRole } from "@/app/actions/members";
 import { BottomNav } from "@/components/bottom-nav";
 import { RoleSelect } from "@/components/role-select";
+import { TopBar } from "@/components/top-bar";
 
 export default async function MembrosPage() {
   const supabase = await createClient();
@@ -18,13 +17,10 @@ export default async function MembrosPage() {
   ]);
 
   return (
-    <main className="mx-auto max-w-3xl px-4 pb-24 pt-6">
-      <div className="mb-6 flex items-center gap-3">
-        <Link href="/dashboard">
-          <ArrowLeft size={20} />
-        </Link>
-        <h1 className="text-lg font-semibold">Membros</h1>
-      </div>
+    <>
+      <TopBar />
+      <main className="mx-auto max-w-3xl px-4 pb-28 pt-6">
+        <h1 className="mb-6 text-lg font-semibold">Membros</h1>
 
       <ul className="divide-y divide-neutral-200 rounded-xl border border-neutral-200">
         {members?.map((member) => {
@@ -54,7 +50,8 @@ export default async function MembrosPage() {
         )}
       </ul>
 
-      <BottomNav />
-    </main>
+        <BottomNav />
+      </main>
+    </>
   );
 }

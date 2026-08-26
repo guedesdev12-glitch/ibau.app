@@ -1,9 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowLeft, ChevronRight, MapPin } from "lucide-react";
+import { ChevronRight, MapPin } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { CellCreateForm } from "@/components/cell-create-form";
 import { BottomNav } from "@/components/bottom-nav";
+import { TopBar } from "@/components/top-bar";
 
 const WEEKDAYS = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
 
@@ -22,13 +23,10 @@ export default async function CelulasPage() {
   ]);
 
   return (
-    <main className="mx-auto max-w-3xl px-4 pb-28 pt-6">
-      <div className="mb-6 flex items-center gap-3">
-        <Link href="/dashboard">
-          <ArrowLeft size={20} />
-        </Link>
-        <h1 className="text-lg font-semibold">Células</h1>
-      </div>
+    <>
+      <TopBar />
+      <main className="mx-auto max-w-3xl px-4 pb-28 pt-6">
+        <h1 className="mb-6 text-lg font-semibold">Células</h1>
 
       <div className="mb-6 space-y-3">
         {cells?.map((cell) => {
@@ -72,7 +70,8 @@ export default async function CelulasPage() {
 
       {canManage && <CellCreateForm members={members ?? []} />}
 
-      <BottomNav />
-    </main>
+        <BottomNav />
+      </main>
+    </>
   );
 }

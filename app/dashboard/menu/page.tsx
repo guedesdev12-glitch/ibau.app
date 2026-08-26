@@ -3,6 +3,7 @@ import { CalendarDays, Shield, ImagePlus, ChevronRight } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { logout } from "@/app/actions/auth";
 import { BottomNav } from "@/components/bottom-nav";
+import { TopBar } from "@/components/top-bar";
 
 export default async function MenuPage() {
   const supabase = await createClient();
@@ -29,8 +30,10 @@ export default async function MenuPage() {
   ].filter(Boolean) as { href: string; label: string; icon: typeof CalendarDays }[];
 
   return (
-    <main className="mx-auto max-w-3xl px-4 pb-28 pt-6">
-      <h1 className="mb-5 text-lg font-semibold">Menu</h1>
+    <>
+      <TopBar />
+      <main className="mx-auto max-w-3xl px-4 pb-28 pt-6">
+        <h1 className="mb-5 text-lg font-semibold">Menu</h1>
 
       <div className="ibau-card mb-5 p-4">
         <p className="text-sm font-medium">{profile?.full_name}</p>
@@ -59,6 +62,7 @@ export default async function MenuPage() {
       </form>
 
       <BottomNav />
-    </main>
+      </main>
+    </>
   );
 }
