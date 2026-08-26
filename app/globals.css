@@ -19,6 +19,35 @@
 body {
   margin: 0;
   background: var(--ibau-bg);
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Impede o realce escuro que o navegador móvel aplica ao tocar,
+   que deixava o texto de botões escuros ilegível durante o toque. */
+button,
+a,
+select,
+input,
+label,
+[role="button"] {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+select {
+  color: inherit;
+}
+
+/* Feedback de toque próprio: leve redução de opacidade em vez de
+   escurecer o fundo (que apagava o texto). */
+button:active,
+a:active,
+[role="button"]:active {
+  opacity: 0.85;
+}
+
+button:disabled {
+  opacity: 0.5;
 }
 
 a {
@@ -51,9 +80,5 @@ a {
 }
 
 .ibau-tile {
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.ibau-tile:active {
-  transform: scale(0.97);
+  transition: opacity 0.15s ease, box-shadow 0.15s ease;
 }
