@@ -49,19 +49,23 @@ export default async function CadastroPage({
   const loginWithApple = loginWithOAuth.bind(null, "apple", origin);
 
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-neutral-950 px-4">
-      <div className="pointer-events-none absolute -top-32 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-white/5 blur-3xl" />
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden px-4 py-10">
+      <div className="absolute inset-0 bg-gradient-to-b from-[#0d3a20] via-[#0a2c18] to-[#050f0a]" />
+      <div className="pointer-events-none absolute -top-24 -left-16 h-72 w-72 rounded-full bg-[#f0a922]/25 blur-[90px]" />
+      <div className="pointer-events-none absolute top-1/3 -right-20 h-80 w-80 rounded-full bg-[#d5342e]/20 blur-[100px]" />
+      <div className="pointer-events-none absolute -bottom-28 left-1/4 h-72 w-72 rounded-full bg-[#1c5aa6]/20 blur-[100px]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.06),transparent_60%)]" />
 
       <div className="relative w-full max-w-sm space-y-7">
         <div className="text-center">
-          <Image src="/logo-v2.png" alt="IBAU" width={72} height={72} className="mx-auto mb-3" />
+          <Image src="/logo-v2.png" alt="IBAU" width={76} height={76} className="mx-auto mb-3" />
           <h1 className="text-2xl font-semibold text-white">Criar conta</h1>
-          <p className="mt-1 text-sm text-white/50">Cadastre-se no IBAU App</p>
+          <p className="mt-1 text-sm text-white/60">Cadastre-se no IBAU App</p>
         </div>
 
-        <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.6)] backdrop-blur">
+        <div className="rounded-3xl bg-white p-6 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.5)]">
           {error && (
-            <p className="mb-4 rounded-xl bg-red-500/10 px-3 py-2.5 text-sm text-red-300">
+            <p className="mb-4 rounded-xl bg-red-50 px-3 py-2.5 text-sm text-red-700">
               {error}
             </p>
           )}
@@ -70,7 +74,7 @@ export default async function CadastroPage({
             <form action={loginWithGoogle}>
               <button
                 type="submit"
-                className="flex w-full items-center justify-center gap-2.5 rounded-xl bg-white py-3 text-sm font-medium text-neutral-900 transition hover:bg-white/90"
+                className="flex w-full items-center justify-center gap-2.5 rounded-xl border border-neutral-200 py-3 text-sm font-medium text-neutral-800 transition hover:bg-neutral-50"
               >
                 <GoogleIcon /> Continuar com Google
               </button>
@@ -78,7 +82,7 @@ export default async function CadastroPage({
             <form action={loginWithApple}>
               <button
                 type="submit"
-                className="flex w-full items-center justify-center gap-2.5 rounded-xl bg-black py-3 text-sm font-medium text-white ring-1 ring-inset ring-white/15 transition hover:bg-neutral-900"
+                className="flex w-full items-center justify-center gap-2.5 rounded-xl bg-black py-3 text-sm font-medium text-white transition hover:bg-neutral-900"
               >
                 <AppleIcon /> Continuar com Apple
               </button>
@@ -86,9 +90,9 @@ export default async function CadastroPage({
           </div>
 
           <div className="my-5 flex items-center gap-3">
-            <div className="h-px flex-1 bg-white/10" />
-            <span className="text-xs text-white/40">ou cadastre-se com e-mail</span>
-            <div className="h-px flex-1 bg-white/10" />
+            <div className="h-px flex-1 bg-neutral-200" />
+            <span className="text-xs text-neutral-400">ou cadastre-se com e-mail</span>
+            <div className="h-px flex-1 bg-neutral-200" />
           </div>
 
           <form action={signup} className="space-y-3">
@@ -97,14 +101,14 @@ export default async function CadastroPage({
               type="text"
               required
               placeholder="Nome completo"
-              className="w-full rounded-xl border border-white/10 bg-white/[0.06] px-3.5 py-2.5 text-sm text-white placeholder:text-white/30 outline-none focus:border-white/30"
+              className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3.5 py-2.5 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-neutral-400"
             />
             <input
               name="email"
               type="email"
               required
               placeholder="E-mail"
-              className="w-full rounded-xl border border-white/10 bg-white/[0.06] px-3.5 py-2.5 text-sm text-white placeholder:text-white/30 outline-none focus:border-white/30"
+              className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3.5 py-2.5 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-neutral-400"
             />
             <input
               name="password"
@@ -112,18 +116,18 @@ export default async function CadastroPage({
               minLength={6}
               required
               placeholder="Senha (mín. 6 caracteres)"
-              className="w-full rounded-xl border border-white/10 bg-white/[0.06] px-3.5 py-2.5 text-sm text-white placeholder:text-white/30 outline-none focus:border-white/30"
+              className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3.5 py-2.5 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-neutral-400"
             />
             <button
               type="submit"
-              className="w-full rounded-xl bg-white py-3 text-sm font-semibold text-neutral-900 transition hover:bg-white/90"
+              className="w-full rounded-xl bg-neutral-900 py-3 text-sm font-semibold text-white transition hover:bg-neutral-800"
             >
               Criar conta
             </button>
           </form>
         </div>
 
-        <p className="text-center text-sm text-white/40">
+        <p className="text-center text-sm text-white/60">
           Já tem conta?{" "}
           <Link href="/login" className="font-medium text-white underline">
             Entrar
