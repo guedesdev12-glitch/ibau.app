@@ -12,6 +12,7 @@ import {
 import { createClient } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/bottom-nav";
 import { HomeCarousel } from "@/components/home-carousel";
+import { TopBar } from "@/components/top-bar";
 
 const WEEKDAYS = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
 const MONTHS = [
@@ -38,7 +39,6 @@ export default async function DashboardPage() {
   } = await supabase.auth.getUser();
 
   const [
-    { data: profile },
     { data: church },
     { data: services },
     { data: events },
@@ -48,7 +48,6 @@ export default async function DashboardPage() {
     { data: canManageMembers },
     { data: canManageChurch },
   ] = await Promise.all([
-    supabase.from("profiles").select("full_name").eq("id", user!.id).single(),
     supabase.from("church_settings").select("*").single(),
     supabase.from("church_services").select("*").eq("active", true).order("weekday"),
     supabase
@@ -79,23 +78,12 @@ export default async function DashboardPage() {
   };
 
   return (
-    <main className="mx-auto max-w-3xl px-4 pb-28">
-      {/* Header */}
-      <div className="flex items-center justify-between pb-4 pt-6">
-        <div className="flex items-center gap-2.5">
-          <Image src="/logo-mark-v2.png" alt="IBAU" width={34} height={34} priority />
-          <span className="text-xl font-black tracking-tight">ibau</span>
-        </div>
-        <Link
-          href="/dashboard/menu"
-          className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-100 text-xs font-semibold"
-        >
-          {profile?.full_name?.slice(0, 1) ?? "?"}
-        </Link>
-      </div>
-      <p className="mb-4 text-sm text-neutral-500">{church?.name ?? "IBAU"}</p>
+    <>
+      <TopBar />
+      <main className="mx-auto max-w-3xl px-4 pb-28">
+        <p className="pb-4 pt-4 text-sm text-neutral-500">{church?.name ?? "IBAU"}</p>
 
-      <HomeCarousel banners={banners ?? []} churchName={church?.name ?? "IBAU"} />
+        <HomeCarousel banners={banners ?? []} churchName={church?.name ?? "IBAU"} />
 
       {/* Programação */}
       <section className="mt-6">
@@ -233,6 +221,7 @@ export default async function DashboardPage() {
       </section>
 
       <BottomNav />
-    </main>
+      </main>
+    </>
   );
 }
