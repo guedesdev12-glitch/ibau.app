@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createDevotional, deleteDevotional } from "@/app/actions/diario";
 import { TopBar } from "@/components/top-bar";
 import { BottomNav } from "@/components/bottom-nav";
+import { PageHeader } from "@/components/page-header";
 
 function formatDate(d: string) {
   return new Date(d + "T00:00:00").toLocaleDateString("pt-BR", {
@@ -37,12 +38,11 @@ export default async function DevocionalPage() {
     <>
       <TopBar />
       <main className="mx-auto max-w-3xl px-4 pb-40 pt-6">
-        <h1 className="ibau-section-title mb-6 text-lg font-semibold">
-          <span className="ibau-section-icon">
-            <Sunrise size={15} />
-          </span>
-          Devocional
-        </h1>
+        <PageHeader
+          title="Devocional"
+          subtitle="Uma palavra para o seu dia."
+          icon={Sunrise}
+        />
 
         {current ? (
           <article className="ibau-card mb-6 overflow-hidden">

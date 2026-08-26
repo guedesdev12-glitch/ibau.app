@@ -8,6 +8,7 @@ import {
 } from "@/app/actions/diario";
 import { TopBar } from "@/components/top-bar";
 import { BottomNav } from "@/components/bottom-nav";
+import { PageHeader } from "@/components/page-header";
 
 export default async function PlanoOracaoPage() {
   const supabase = await createClient();
@@ -26,15 +27,11 @@ export default async function PlanoOracaoPage() {
     <>
       <TopBar />
       <main className="mx-auto max-w-3xl px-4 pb-40 pt-6">
-        <h1 className="ibau-section-title mb-1 text-lg font-semibold">
-          <span className="ibau-section-icon">
-            <HandHeart size={15} />
-          </span>
-          Plano de oração
-        </h1>
-        <p className="mb-6 ml-9 text-xs text-neutral-500">
-          Seus alvos de oração. Só você vê.
-        </p>
+        <PageHeader
+          title="Plano de oração"
+          subtitle="Seus alvos de oração. Só você vê."
+          icon={HandHeart}
+        />
 
         <form action={createPrayerItem} className="ibau-card mb-6 space-y-3 p-5">
           <input

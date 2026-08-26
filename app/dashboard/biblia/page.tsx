@@ -2,6 +2,7 @@ import Link from "next/link";
 import { BookOpenText, ChevronLeft, ChevronRight, ArrowLeft } from "lucide-react";
 import { TopBar } from "@/components/top-bar";
 import { BottomNav } from "@/components/bottom-nav";
+import { PageHeader } from "@/components/page-header";
 import { OLD_TESTAMENT, NEW_TESTAMENT, findBook } from "@/lib/bible-books";
 
 type Verse = { verse: number; text: string };
@@ -32,12 +33,7 @@ export default async function BibliaPage({
       <>
         <TopBar />
         <main className="mx-auto max-w-3xl px-4 pb-40 pt-6">
-          <h1 className="ibau-section-title mb-6 text-lg font-semibold">
-            <span className="ibau-section-icon">
-              <BookOpenText size={15} />
-            </span>
-            Bíblia
-          </h1>
+          <PageHeader title="Bíblia" subtitle="Almeida · 66 livros" icon={BookOpenText} />
 
           {[
             { label: "Antigo Testamento", books: OLD_TESTAMENT },
