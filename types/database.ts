@@ -408,6 +408,146 @@ export type Database = {
           },
         ]
       }
+      devotionals: {
+        Row: {
+          content: string
+          created_at: string
+          created_by: string | null
+          devotional_date: string
+          id: string
+          title: string
+          verse_reference: string | null
+          verse_text: string | null
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          created_by?: string | null
+          devotional_date: string
+          id?: string
+          title: string
+          verse_reference?: string | null
+          verse_text?: string | null
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          created_by?: string | null
+          devotional_date?: string
+          id?: string
+          title?: string
+          verse_reference?: string | null
+          verse_text?: string | null
+        }
+        Relationships: []
+      }
+      notes: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          profile_id: string
+          title: string | null
+          updated_at: string
+          verse_reference: string | null
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          profile_id: string
+          title?: string | null
+          updated_at?: string
+          verse_reference?: string | null
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          profile_id?: string
+          title?: string | null
+          updated_at?: string
+          verse_reference?: string | null
+        }
+        Relationships: []
+      }
+      prayer_items: {
+        Row: {
+          answered: boolean
+          answered_at: string | null
+          created_at: string
+          description: string | null
+          id: string
+          last_prayed_at: string | null
+          prayed_count: number
+          profile_id: string
+          title: string
+        }
+        Insert: {
+          answered?: boolean
+          answered_at?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          last_prayed_at?: string | null
+          prayed_count?: number
+          profile_id: string
+          title: string
+        }
+        Update: {
+          answered?: boolean
+          answered_at?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          last_prayed_at?: string | null
+          prayed_count?: number
+          profile_id?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      prayer_request_prayers: {
+        Row: { created_at: string; profile_id: string; request_id: string }
+        Insert: { created_at?: string; profile_id: string; request_id: string }
+        Update: { created_at?: string; profile_id?: string; request_id?: string }
+        Relationships: []
+      }
+      prayer_requests: {
+        Row: {
+          answered: boolean
+          content: string
+          created_at: string
+          id: string
+          is_anonymous: boolean
+          profile_id: string
+        }
+        Insert: {
+          answered?: boolean
+          content: string
+          created_at?: string
+          id?: string
+          is_anonymous?: boolean
+          profile_id: string
+        }
+        Update: {
+          answered?: boolean
+          content?: string
+          created_at?: string
+          id?: string
+          is_anonymous?: boolean
+          profile_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prayer_requests_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       permissions: {
         Row: {
           created_at: string

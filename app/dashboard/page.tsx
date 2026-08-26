@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { CalendarDays, Users2, Shield, ImagePlus, ChevronRight, Clock, Sparkles, Church, CalendarClock, BookOpen, FileText } from "lucide-react";
+import { CalendarDays, Users2, Shield, ImagePlus, ChevronRight, Clock, Sparkles, Church, CalendarClock, BookOpen, FileText, BookOpenText, Sunrise, NotebookPen, HandHeart, MessagesSquare } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/bottom-nav";
 import { MediaCarousel } from "@/components/media-carousel";
@@ -15,6 +15,14 @@ const QUICK_LINKS = [
   { href: "/dashboard/membros", label: "Membros", icon: CalendarDays, perm: "membros" },
   { href: "/dashboard/admin/categorias", label: "Categorias", icon: Shield, perm: "dev" },
   { href: "/dashboard/admin/carrossel", label: "Carrossel", icon: ImagePlus, perm: "igreja" },
+];
+
+const DIARIO = [
+  { href: "/dashboard/biblia", label: "Bíblia", icon: BookOpenText },
+  { href: "/dashboard/devocional", label: "Devocional", icon: Sunrise },
+  { href: "/dashboard/anotacoes", label: "Anotações", icon: NotebookPen },
+  { href: "/dashboard/plano-oracao", label: "Plano de oração", icon: HandHeart },
+  { href: "/dashboard/mural-oracoes", label: "Mural de orações", icon: MessagesSquare },
 ];
 
 export default async function DashboardPage() {
@@ -186,6 +194,30 @@ export default async function DashboardPage() {
             )}
           </section>
         )}
+
+        {/* Diário */}
+        <section className="mt-6">
+          <p className="ibau-section-title mb-3 text-base font-semibold">
+            <span className="ibau-section-icon"><BookOpenText size={14} /></span>
+            Diário
+          </p>
+          <div className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-1">
+            {DIARIO.map(({ href, label, icon: Icon }) => (
+              <Link
+                key={href}
+                href={href}
+                className="ibau-card flex w-24 flex-shrink-0 flex-col items-center gap-2 p-4"
+              >
+                <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#14532d]/8 text-[#14532d]">
+                  <Icon size={20} />
+                </span>
+                <span className="text-center text-[11px] font-medium leading-tight">
+                  {label}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </section>
 
         {/* Atalhos */}
         <section className="mt-6">
