@@ -402,10 +402,12 @@ export type Database = {
       }
       profiles: {
         Row: {
+          active: boolean
           address: string | null
           avatar_url: string | null
           birth_date: string | null
           created_at: string
+          email: string | null
           full_name: string
           id: string
           phone: string | null
@@ -413,10 +415,12 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          active?: boolean
           address?: string | null
           avatar_url?: string | null
           birth_date?: string | null
           created_at?: string
+          email?: string | null
           full_name: string
           id: string
           phone?: string | null
@@ -424,10 +428,12 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          active?: boolean
           address?: string | null
           avatar_url?: string | null
           birth_date?: string | null
           created_at?: string
+          email?: string | null
           full_name?: string
           id?: string
           phone?: string | null
@@ -476,18 +482,21 @@ export type Database = {
       }
       roles: {
         Row: {
+          admin_only: boolean
           created_at: string
           id: string
           is_developer: boolean
           name: string
         }
         Insert: {
+          admin_only?: boolean
           created_at?: string
           id?: string
           is_developer?: boolean
           name: string
         }
         Update: {
+          admin_only?: boolean
           created_at?: string
           id?: string
           is_developer?: boolean

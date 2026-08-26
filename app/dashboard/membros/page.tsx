@@ -4,18 +4,22 @@ import { BottomNav } from "@/components/bottom-nav";
 import { RoleSelect } from "@/components/role-select";
 import { TopBar } from "@/components/top-bar";
 import { Users } from "lucide-react";
+import { isAdminLevel } from "@/lib/admin-check";
 
 export default async function MembrosPage() {
   const supabase = await createClient();
 
-  const [{ data: members }, { data: roles }, { data: canManage }] = await Promise.all([
+  const [{ data: members }, { data: roles }, { data: canManage }, adminLevel] = await Promise.all([
     supabase
       .from("profiles")
       .select("id, full_name, phone, role_id, roles(name)")
       .order("full_name"),
-    supabase.from("roles").select("id, name").order("name"),
+    supabase.from("roles").select("id, name, admin_only").order("name"),
     supabase.rpc("has_permission", { p_key: "membros.manage" }),
+    isAdminLevel(),
   ]);
+
+  const assignableRoles = roles?.filter((r) => adminLevel || !r.admin_only) ?? [];
 
   return (
     <>
@@ -40,7 +44,7 @@ export default async function MembrosPage() {
                 <p className="text-neutral-500">{member.phone ?? "Sem telefone cadastrado"}</p>
               </div>
               {updateRole && roles ? (
-                <RoleSelect action={updateRole} roleId={member.role_id} roles={roles} />
+                <RoleSelect action={updateRole} roleId={member.role_id} roles={assignableRoles} />
               ) : (
                 <span className="rounded-full bg-neutral-100 px-3 py-1 text-xs text-neutral-600">
                   {roleName}
