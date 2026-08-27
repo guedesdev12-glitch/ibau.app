@@ -2,7 +2,15 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import type { Database } from "@/types/database";
 
-const PUBLIC_PATHS = ["/login", "/cadastro", "/auth", "/esqueci-senha", "/redefinir-senha"];
+const PUBLIC_PATHS = [
+  "/login",
+  "/cadastro",
+  "/auth",
+  "/esqueci-senha",
+  "/redefinir-senha",
+];
+
+const ONBOARDING_PATH = "/completar-cadastro";
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
@@ -32,20 +40,37 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const isPublicPath = PUBLIC_PATHS.some((path) =>
-    request.nextUrl.pathname.startsWith(path),
-  );
+  const pathname = request.nextUrl.pathname;
+  const isPublicPath = PUBLIC_PATHS.some((path) => pathname.startsWith(path));
+  const isOnboarding = pathname.startsWith(ONBOARDING_PATH);
 
-  if (!user && !isPublicPath) {
+  if (!user && !isPublicPath && !isOnboarding) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);
   }
 
-  if (user && request.nextUrl.pathname === "/login") {
-    const url = request.nextUrl.clone();
-    url.pathname = "/dashboard";
-    return NextResponse.redirect(url);
+  if (user) {
+    // Quem ainda não completou o cadastro só pode ver a tela de cadastro
+    if (!isOnboarding && !isPublicPath) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("onboarding_completed")
+        .eq("id", user.id)
+        .single();
+
+      if (profile && !profile.onboarding_completed) {
+        const url = request.nextUrl.clone();
+        url.pathname = ONBOARDING_PATH;
+        return NextResponse.redirect(url);
+      }
+    }
+
+    if (pathname === "/login") {
+      const url = request.nextUrl.clone();
+      url.pathname = "/dashboard";
+      return NextResponse.redirect(url);
+    }
   }
 
   return supabaseResponse;

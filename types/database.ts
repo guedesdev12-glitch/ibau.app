@@ -644,40 +644,73 @@ export type Database = {
         Row: {
           active: boolean
           address: string | null
+          attended_encounter: boolean | null
           avatar_url: string | null
           birth_date: string | null
+          city: string | null
+          complement: string | null
+          cpf: string | null
           created_at: string
           email: string | null
+          encounter_date: string | null
           full_name: string
           id: string
+          neighborhood: string | null
+          number: string | null
+          onboarding_completed: boolean
           phone: string | null
+          postal_code: string | null
           role_id: string
+          state: string | null
+          street: string | null
           updated_at: string
         }
         Insert: {
           active?: boolean
           address?: string | null
+          attended_encounter?: boolean | null
           avatar_url?: string | null
           birth_date?: string | null
+          city?: string | null
+          complement?: string | null
+          cpf?: string | null
           created_at?: string
           email?: string | null
+          encounter_date?: string | null
           full_name: string
           id: string
+          neighborhood?: string | null
+          number?: string | null
+          onboarding_completed?: boolean
           phone?: string | null
+          postal_code?: string | null
           role_id: string
+          state?: string | null
+          street?: string | null
           updated_at?: string
         }
         Update: {
           active?: boolean
           address?: string | null
+          attended_encounter?: boolean | null
           avatar_url?: string | null
           birth_date?: string | null
+          city?: string | null
+          complement?: string | null
+          cpf?: string | null
           created_at?: string
           email?: string | null
+          encounter_date?: string | null
           full_name?: string
           id?: string
+          neighborhood?: string | null
+          number?: string | null
+          onboarding_completed?: boolean
           phone?: string | null
+          postal_code?: string | null
           role_id?: string
+          state?: string | null
+          street?: string | null
           updated_at?: string
         }
         Relationships: [
