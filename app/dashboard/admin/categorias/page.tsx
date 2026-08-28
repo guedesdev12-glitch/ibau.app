@@ -38,7 +38,7 @@ export default async function CategoriasPage() {
       <PageHeader
         title="Categorias & Permissões"
         subtitle="Só Desenvolvedor edita. As permissões valem por categoria, nunca por pessoa."
-        icon={Shield}
+        icon={<Shield size={15} />}
         fallbackHref="/dashboard/menu"
       />
 

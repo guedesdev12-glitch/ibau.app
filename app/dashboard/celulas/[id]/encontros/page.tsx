@@ -75,7 +75,7 @@ export default async function ReunioesPage({
         <PageHeader
           title="Reuniões"
           subtitle="Toque num sábado para registrar."
-          icon={ClipboardList}
+          icon={<ClipboardList size={15} />}
           fallbackHref={`/dashboard/celulas/${id}`}
         />
 

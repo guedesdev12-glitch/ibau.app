@@ -26,7 +26,7 @@ export default async function MembrosPage() {
     <>
       <TopBar />
       <main className="mx-auto max-w-3xl px-4 pb-40 pt-6">
-        <PageHeader title="Membros" subtitle="Diretório e categorias." icon={Users} fallbackHref="/dashboard/menu" />
+        <PageHeader title="Membros" subtitle="Diretório e categorias." icon={<Users size={15} />} fallbackHref="/dashboard/menu" />
 
       <ul className="divide-y divide-neutral-200 rounded-xl border border-neutral-200">
         {members?.map((member) => {

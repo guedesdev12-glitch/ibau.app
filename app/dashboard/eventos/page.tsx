@@ -77,7 +77,7 @@ export default async function EventosPage({
     <>
       <TopBar />
       <main className="mx-auto max-w-3xl px-4 pb-40 pt-6">
-        <PageHeader title="Eventos" subtitle="Programação e seus ingressos." icon={CalendarDays} />
+        <PageHeader title="Eventos" subtitle="Programação e seus ingressos." icon={<CalendarDays size={15} />} />
 
         {/* Abas */}
         <div className="mb-5 flex gap-2">

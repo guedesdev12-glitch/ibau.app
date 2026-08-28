@@ -41,7 +41,7 @@ export default async function DevocionalPage() {
         <PageHeader
           title="Devocional"
           subtitle="Uma palavra para o seu dia."
-          icon={Sunrise}
+          icon={<Sunrise size={15} />}
         />
 
         {current ? (

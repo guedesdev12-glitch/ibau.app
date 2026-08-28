@@ -20,7 +20,7 @@ export default async function AnotacoesPage() {
         <PageHeader
           title="Anotações"
           subtitle="Só você vê o que escreve aqui."
-          icon={NotebookPen}
+          icon={<NotebookPen size={15} />}
         />
 
         {error && (

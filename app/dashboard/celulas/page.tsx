@@ -27,7 +27,7 @@ export default async function CelulasPage() {
     <>
       <TopBar />
       <main className="mx-auto max-w-3xl px-4 pb-40 pt-6">
-        <PageHeader title="Células" subtitle="Todas as células da igreja." icon={Users2} />
+        <PageHeader title="Células" subtitle="Todas as células da igreja." icon={<Users2 size={15} />} />
 
       <div className="mb-6 space-y-3">
         {cells?.map((cell) => {

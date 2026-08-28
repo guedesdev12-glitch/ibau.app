@@ -150,13 +150,19 @@ export default async function DashboardPage() {
         />
 
         {/* Versículo do dia */}
-        <section className="ibau-enter mt-5 overflow-hidden rounded-2xl bg-gradient-to-br from-[#123f26] to-[#0a2c18] p-5 text-white shadow-[0_14px_34px_-16px_rgba(10,44,24,0.7)]">
-          <div className="mb-2 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-[#f0a922]">
-            <Quote size={12} /> Palavra do dia
+        <Link
+          href="/dashboard/biblia"
+          className="ibau-enter ibau-pressable mt-5 block overflow-hidden rounded-2xl bg-gradient-to-br from-[#123f26] to-[#0a2c18] p-5 shadow-[0_14px_34px_-16px_rgba(10,44,24,0.7)]"
+        >
+          <div className="mb-2 flex items-center justify-between">
+            <span className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-[#f0a922]">
+              <Quote size={12} /> Palavra do dia
+            </span>
+            <ChevronRight size={15} className="text-white/50" />
           </div>
-          <p className="text-[15px] font-medium leading-relaxed">{verse.text}</p>
+          <p className="text-[15px] font-medium leading-relaxed text-white">{verse.text}</p>
           <p className="mt-2 text-xs font-semibold text-white/60">{verse.reference}</p>
-        </section>
+        </Link>
 
         {/* Resumo rápido */}
         <section className="mt-4 grid grid-cols-3 gap-2.5">

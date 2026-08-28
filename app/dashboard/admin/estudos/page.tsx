@@ -24,7 +24,7 @@ export default async function EstudosAdminPage() {
     <>
       <TopBar />
       <main className="mx-auto max-w-3xl px-4 pb-40 pt-6">
-        <PageHeader title="Estudo semanal" subtitle="Publicado para todas as células." icon={BookOpen} fallbackHref="/dashboard/menu" />
+        <PageHeader title="Estudo semanal" subtitle="Publicado para todas as células." icon={<BookOpen size={15} />} fallbackHref="/dashboard/menu" />
 
         <div className="mb-6">
           <StudyCreateForm />

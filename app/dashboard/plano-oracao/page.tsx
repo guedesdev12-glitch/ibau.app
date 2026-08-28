@@ -30,7 +30,7 @@ export default async function PlanoOracaoPage() {
         <PageHeader
           title="Plano de oração"
           subtitle="Seus alvos de oração. Só você vê."
-          icon={HandHeart}
+          icon={<HandHeart size={15} />}
         />
 
         <form action={createPrayerItem} className="ibau-card mb-6 space-y-3 p-5">

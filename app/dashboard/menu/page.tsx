@@ -39,7 +39,7 @@ export default async function MenuPage() {
     <>
       <TopBar />
       <main className="mx-auto max-w-3xl px-4 pb-40 pt-6">
-        <PageHeader title="Menu" icon={Grid2x2} />
+        <PageHeader title="Menu" icon={<Grid2x2 size={15} />} />
 
       <div className="ibau-card mb-5 p-4">
         <p className="text-sm font-medium">{profile?.full_name}</p>

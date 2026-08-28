@@ -61,7 +61,7 @@ export default async function MuralOracoesPage() {
         <PageHeader
           title="Mural de orações"
           subtitle="Compartilhe seu pedido e interceda pelos irmãos."
-          icon={MessagesSquare}
+          icon={<MessagesSquare size={15} />}
         />
 
         {error && (

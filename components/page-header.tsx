@@ -1,18 +1,20 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
 
 export function PageHeader({
   title,
   subtitle,
-  icon: Icon,
+  icon,
   fallbackHref = "/dashboard",
 }: {
   title: string;
   subtitle?: string;
-  icon?: LucideIcon;
+  /** Elemento já renderizado (ex: <Sunrise size={15} />). Nunca o componente em si:
+   *  funções não atravessam a fronteira servidor → cliente. */
+  icon?: ReactNode;
   fallbackHref?: string;
 }) {
   const router = useRouter();
@@ -21,7 +23,7 @@ export function PageHeader({
     <div className="mb-6 flex items-start gap-3">
       <button
         onClick={() => {
-          if (window.history.length > 1) router.back();
+          if (typeof window !== "undefined" && window.history.length > 1) router.back();
           else router.push(fallbackHref);
         }}
         aria-label="Voltar"
@@ -32,11 +34,7 @@ export function PageHeader({
 
       <div className="flex-1">
         <h1 className="ibau-section-title text-lg font-semibold">
-          {Icon && (
-            <span className="ibau-section-icon">
-              <Icon size={15} />
-            </span>
-          )}
+          {icon && <span className="ibau-section-icon">{icon}</span>}
           {title}
         </h1>
         {subtitle && <p className="mt-1 text-xs text-neutral-500">{subtitle}</p>}

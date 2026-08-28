@@ -33,7 +33,7 @@ export default async function BibliaPage({
       <>
         <TopBar />
         <main className="mx-auto max-w-3xl px-4 pb-40 pt-6">
-          <PageHeader title="Bíblia" subtitle="Almeida · 66 livros" icon={BookOpenText} />
+          <PageHeader title="Bíblia" subtitle="Almeida · 66 livros" icon={<BookOpenText size={15} />} />
 
           {[
             { label: "Antigo Testamento", books: OLD_TESTAMENT },

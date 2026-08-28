@@ -29,7 +29,7 @@ export default async function CarrosselAdminPage() {
       <PageHeader
         title="Carrossel da tela inicial"
         subtitle="Fotos e avisos que aparecem para todo mundo."
-        icon={ImagePlus}
+        icon={<ImagePlus size={15} />}
         fallbackHref="/dashboard/menu"
       />
 
