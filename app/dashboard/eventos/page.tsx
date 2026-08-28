@@ -13,6 +13,7 @@ import {
 import { createClient } from "@/lib/supabase/server";
 import { TopBar } from "@/components/top-bar";
 import { BottomNav } from "@/components/bottom-nav";
+import { PageHeader } from "@/components/page-header";
 import { EventCreateForm } from "@/components/event-create-form";
 import { cancelTicket } from "@/app/actions/tickets";
 
@@ -76,12 +77,7 @@ export default async function EventosPage({
     <>
       <TopBar />
       <main className="mx-auto max-w-3xl px-4 pb-40 pt-6">
-        <h1 className="ibau-section-title mb-4 text-lg font-semibold">
-          <span className="ibau-section-icon">
-            <CalendarDays size={15} />
-          </span>
-          Eventos
-        </h1>
+        <PageHeader title="Eventos" subtitle="Programação e seus ingressos." icon={CalendarDays} />
 
         {/* Abas */}
         <div className="mb-5 flex gap-2">

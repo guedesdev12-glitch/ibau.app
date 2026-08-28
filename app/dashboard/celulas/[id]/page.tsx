@@ -4,6 +4,7 @@ import { Users2, UserPlus, Heart, CalendarDays, ClipboardList, ChevronRight, Map
 import { createClient } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/bottom-nav";
 import { TopBar } from "@/components/top-bar";
+import { PageHeader } from "@/components/page-header";
 
 function formatDate(dateStr: string) {
   const [y, m, d] = dateStr.split("-").map(Number);
@@ -86,6 +87,8 @@ export default async function CelulaDashboardPage({
     <>
       <TopBar />
       <main className="mx-auto max-w-3xl px-4 pb-40 pt-6">
+        <PageHeader title="Célula" fallbackHref="/dashboard/celulas" />
+
         <div className="mb-5 flex items-center gap-3">
           <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-2xl bg-neutral-100">
             {cell.photo_url ? (

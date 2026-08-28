@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { updateMemberRole } from "@/app/actions/members";
 import { BottomNav } from "@/components/bottom-nav";
+import { PageHeader } from "@/components/page-header";
 import { RoleSelect } from "@/components/role-select";
 import { TopBar } from "@/components/top-bar";
 import { Users } from "lucide-react";
@@ -25,10 +26,7 @@ export default async function MembrosPage() {
     <>
       <TopBar />
       <main className="mx-auto max-w-3xl px-4 pb-40 pt-6">
-        <h1 className="ibau-section-title mb-6 text-lg font-semibold">
-          <span className="ibau-section-icon"><Users size={15} /></span>
-          Membros
-        </h1>
+        <PageHeader title="Membros" subtitle="Diretório e categorias." icon={Users} fallbackHref="/dashboard/menu" />
 
       <ul className="divide-y divide-neutral-200 rounded-xl border border-neutral-200">
         {members?.map((member) => {

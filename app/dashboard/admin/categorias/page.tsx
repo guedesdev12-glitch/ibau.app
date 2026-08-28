@@ -1,10 +1,12 @@
 import { Fragment } from "react";
-import Link from "next/link";
 import { redirect } from "next/navigation";
-import { ArrowLeft, Trash2, Plus } from "lucide-react";
+import { Shield, Trash2, Plus } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { createRole, deleteRole, togglePermission } from "@/app/actions/roles";
 import { PermissionCheckbox } from "@/components/permission-checkbox";
+import { PageHeader } from "@/components/page-header";
+import { TopBar } from "@/components/top-bar";
+import { BottomNav } from "@/components/bottom-nav";
 
 export default async function CategoriasPage() {
   const supabase = await createClient();
@@ -30,17 +32,15 @@ export default async function CategoriasPage() {
   });
 
   return (
-    <main className="mx-auto max-w-3xl px-4 pb-40 pt-6">
-      <div className="mb-2 flex items-center gap-3">
-        <Link href="/dashboard">
-          <ArrowLeft size={20} />
-        </Link>
-        <h1 className="text-lg font-semibold">Categorias & Permissões</h1>
-      </div>
-      <p className="mb-6 ml-8 text-xs text-neutral-500">
-        Só quem é Desenvolvedor vê e edita essa tela. As permissões valem por categoria,
-        nunca por pessoa.
-      </p>
+    <>
+      <TopBar />
+      <main className="mx-auto max-w-3xl px-4 pb-40 pt-6">
+      <PageHeader
+        title="Categorias & Permissões"
+        subtitle="Só Desenvolvedor edita. As permissões valem por categoria, nunca por pessoa."
+        icon={Shield}
+        fallbackHref="/dashboard/menu"
+      />
 
       <div className="overflow-x-auto rounded-xl border border-neutral-200">
         <table className="w-full text-sm">
@@ -116,6 +116,8 @@ export default async function CategoriasPage() {
           </button>
         </form>
       </details>
-    </main>
+      <BottomNav />
+      </main>
+    </>
   );
 }

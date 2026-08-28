@@ -4,6 +4,7 @@ import { ChevronRight, MapPin, Users2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { CellCreateForm } from "@/components/cell-create-form";
 import { BottomNav } from "@/components/bottom-nav";
+import { PageHeader } from "@/components/page-header";
 import { TopBar } from "@/components/top-bar";
 
 const WEEKDAYS = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
@@ -26,10 +27,7 @@ export default async function CelulasPage() {
     <>
       <TopBar />
       <main className="mx-auto max-w-3xl px-4 pb-40 pt-6">
-        <h1 className="ibau-section-title mb-6 text-lg font-semibold">
-          <span className="ibau-section-icon"><Users2 size={15} /></span>
-          Células
-        </h1>
+        <PageHeader title="Células" subtitle="Todas as células da igreja." icon={Users2} />
 
       <div className="mb-6 space-y-3">
         {cells?.map((cell) => {

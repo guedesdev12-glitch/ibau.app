@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { isAdminLevel } from "@/lib/admin-check";
 import { TopBar } from "@/components/top-bar";
 import { BottomNav } from "@/components/bottom-nav";
+import { PageHeader } from "@/components/page-header";
 import { UserCreateForm } from "@/components/user-create-form";
 import { UserRowActions } from "@/components/user-row-actions";
 
@@ -25,12 +26,7 @@ export default async function UsuariosPage() {
     <>
       <TopBar />
       <main className="mx-auto max-w-3xl px-4 pb-40 pt-6">
-        <h1 className="ibau-section-title mb-6 text-lg font-semibold">
-          <span className="ibau-section-icon">
-            <UsersIcon size={15} />
-          </span>
-          Painel de usuários
-        </h1>
+        <PageHeader title="Painel de usuários" subtitle="Criar contas, redefinir senhas e liberar acessos." icon={UsersIcon} fallbackHref="/dashboard/menu" />
 
         <div className="mb-6">
           <UserCreateForm roles={roles ?? []} />

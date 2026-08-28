@@ -1,11 +1,13 @@
-import Link from "next/link";
 import Image from "next/image";
 import { redirect } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
+import { ImagePlus } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { deleteBanner, toggleBannerActive, moveBanner } from "@/app/actions/banners";
 import { BannerControls } from "@/components/banner-controls";
 import { BannerUploadForm } from "@/components/banner-upload-form";
+import { TopBar } from "@/components/top-bar";
+import { BottomNav } from "@/components/bottom-nav";
+import { PageHeader } from "@/components/page-header";
 
 export default async function CarrosselAdminPage() {
   const supabase = await createClient();
@@ -21,16 +23,15 @@ export default async function CarrosselAdminPage() {
     .order("position");
 
   return (
-    <main className="mx-auto max-w-3xl px-4 pb-40 pt-6">
-      <div className="mb-6 flex items-center gap-3">
-        <Link href="/dashboard">
-          <ArrowLeft size={20} />
-        </Link>
-        <div>
-          <h1 className="text-lg font-semibold">Carrossel da tela inicial</h1>
-          <p className="text-xs text-neutral-500">Fotos e avisos que aparecem para todo mundo</p>
-        </div>
-      </div>
+    <>
+      <TopBar />
+      <main className="mx-auto max-w-3xl px-4 pb-40 pt-6">
+      <PageHeader
+        title="Carrossel da tela inicial"
+        subtitle="Fotos e avisos que aparecem para todo mundo."
+        icon={ImagePlus}
+        fallbackHref="/dashboard/menu"
+      />
 
       <BannerUploadForm />
 
@@ -60,6 +61,8 @@ export default async function CarrosselAdminPage() {
           </p>
         )}
       </div>
-    </main>
+      <BottomNav />
+      </main>
+    </>
   );
 }

@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { deleteWeeklyStudy } from "@/app/actions/studies";
 import { TopBar } from "@/components/top-bar";
 import { BottomNav } from "@/components/bottom-nav";
+import { PageHeader } from "@/components/page-header";
 import { StudyCreateForm } from "@/components/study-create-form";
 
 export default async function EstudosAdminPage() {
@@ -23,12 +24,7 @@ export default async function EstudosAdminPage() {
     <>
       <TopBar />
       <main className="mx-auto max-w-3xl px-4 pb-40 pt-6">
-        <h1 className="ibau-section-title mb-6 text-lg font-semibold">
-          <span className="ibau-section-icon">
-            <BookOpen size={15} />
-          </span>
-          Estudo semanal
-        </h1>
+        <PageHeader title="Estudo semanal" subtitle="Publicado para todas as células." icon={BookOpen} fallbackHref="/dashboard/menu" />
 
         <div className="mb-6">
           <StudyCreateForm />

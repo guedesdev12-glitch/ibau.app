@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { ArrowLeft, Users2, UserPlus, Heart, Star, ChevronLeft, ChevronRight } from "lucide-react";
+import { ClipboardList, Users2, UserPlus, Heart, Star, ChevronLeft, ChevronRight } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { TopBar } from "@/components/top-bar";
+import { PageHeader } from "@/components/page-header";
 import { MONTH_NAMES } from "@/lib/saturdays";
 
 const STATUS_STYLE: Record<string, { label: string; className: string }> = {
@@ -71,12 +72,12 @@ export default async function ReunioesPage({
     <>
       <TopBar />
       <main className="mx-auto max-w-3xl px-4 pb-40 pt-6">
-        <div className="mb-5 flex items-center gap-3">
-          <Link href={`/dashboard/celulas/${id}`}>
-            <ArrowLeft size={20} />
-          </Link>
-          <h1 className="text-lg font-semibold">Reuniões</h1>
-        </div>
+        <PageHeader
+          title="Reuniões"
+          subtitle="Toque num sábado para registrar."
+          icon={ClipboardList}
+          fallbackHref={`/dashboard/celulas/${id}`}
+        />
 
         {/* Navegação por mês */}
         <div className="ibau-card mb-5 flex items-center justify-between p-3">

@@ -3,6 +3,7 @@ import { CalendarDays, Shield, ImagePlus, ChevronRight, Grid2x2, Users, BookOpen
 import { createClient } from "@/lib/supabase/server";
 import { logout } from "@/app/actions/auth";
 import { BottomNav } from "@/components/bottom-nav";
+import { PageHeader } from "@/components/page-header";
 import { TopBar } from "@/components/top-bar";
 import { isAdminLevel } from "@/lib/admin-check";
 
@@ -38,10 +39,7 @@ export default async function MenuPage() {
     <>
       <TopBar />
       <main className="mx-auto max-w-3xl px-4 pb-40 pt-6">
-        <h1 className="ibau-section-title mb-5 text-lg font-semibold">
-          <span className="ibau-section-icon"><Grid2x2 size={15} /></span>
-          Menu
-        </h1>
+        <PageHeader title="Menu" icon={Grid2x2} />
 
       <div className="ibau-card mb-5 p-4">
         <p className="text-sm font-medium">{profile?.full_name}</p>
