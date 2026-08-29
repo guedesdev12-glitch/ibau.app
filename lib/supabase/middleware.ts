@@ -12,6 +12,10 @@ const PUBLIC_PATHS = [
 
 const ONBOARDING_PATH = "/completar-cadastro";
 
+/** Tempo máximo de inatividade antes de encerrar a sessão. */
+const INACTIVITY_LIMIT_MS = 2 * 60 * 60 * 1000; // 2 horas
+const ACTIVITY_COOKIE = "ibau-last-activity";
+
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
 
@@ -51,7 +55,40 @@ export async function updateSession(request: NextRequest) {
   }
 
   if (user) {
-    // Quem ainda não completou o cadastro só pode ver a tela de cadastro
+    // ---- Expiração por inatividade ----
+    if (!isPublicPath) {
+      const lastRaw = request.cookies.get(ACTIVITY_COOKIE)?.value;
+      const last = lastRaw ? Number(lastRaw) : null;
+      const now = Date.now();
+
+      if (last && Number.isFinite(last) && now - last > INACTIVITY_LIMIT_MS) {
+        await supabase.auth.signOut();
+
+        const url = request.nextUrl.clone();
+        url.pathname = "/login";
+        url.search = "?message=Sua sessão expirou por inatividade. Entre novamente.";
+        const redirectResponse = NextResponse.redirect(url);
+
+        // Limpa cookies de sessão e o marcador de atividade
+        for (const cookie of request.cookies.getAll()) {
+          if (cookie.name.startsWith("sb-") || cookie.name === ACTIVITY_COOKIE) {
+            redirectResponse.cookies.set(cookie.name, "", { maxAge: 0, path: "/" });
+          }
+        }
+        return redirectResponse;
+      }
+
+      // Renova o marcador a cada requisição autenticada
+      supabaseResponse.cookies.set(ACTIVITY_COOKIE, String(now), {
+        httpOnly: true,
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
+        path: "/",
+        maxAge: INACTIVITY_LIMIT_MS / 1000,
+      });
+    }
+
+    // ---- Cadastro obrigatório ----
     if (!isOnboarding && !isPublicPath) {
       const { data: profile } = await supabase
         .from("profiles")
@@ -62,7 +99,15 @@ export async function updateSession(request: NextRequest) {
       if (profile && !profile.onboarding_completed) {
         const url = request.nextUrl.clone();
         url.pathname = ONBOARDING_PATH;
-        return NextResponse.redirect(url);
+        const r = NextResponse.redirect(url);
+        r.cookies.set(ACTIVITY_COOKIE, String(Date.now()), {
+          httpOnly: true,
+          sameSite: "lax",
+          secure: process.env.NODE_ENV === "production",
+          path: "/",
+          maxAge: INACTIVITY_LIMIT_MS / 1000,
+        });
+        return r;
       }
     }
 
