@@ -4,7 +4,16 @@ import { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-type Slide = { id: string; image_url: string; title: string | null; href?: string };
+type Slide = {
+  id: string;
+  image_url: string;
+  title: string | null;
+  href?: string;
+  /** Conteúdo já renderizado (selo de data, preço...). Nunca componentes. */
+  topLeft?: React.ReactNode;
+  topRight?: React.ReactNode;
+  footnote?: string | null;
+};
 
 export function MediaCarousel({
   slides,
@@ -53,15 +62,20 @@ export function MediaCarousel({
                   className="object-cover"
                   priority
                 />
+                {(s.title || s.topLeft || s.topRight) && (
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-black/20" />
+                )}
+                {s.topLeft && <div className="absolute left-4 top-4">{s.topLeft}</div>}
+                {s.topRight && <div className="absolute right-4 top-4">{s.topRight}</div>}
                 {s.title && (
-                  <>
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/5 to-transparent" />
-                    <div className="absolute inset-x-0 bottom-0 p-4">
-                      <p className="text-base font-semibold leading-snug text-white drop-shadow">
-                        {s.title}
-                      </p>
-                    </div>
-                  </>
+                  <div className="absolute inset-x-0 bottom-0 p-4">
+                    <p className="text-lg font-bold leading-snug text-white drop-shadow">
+                      {s.title}
+                    </p>
+                    {s.footnote && (
+                      <p className="mt-0.5 text-xs text-white/75">{s.footnote}</p>
+                    )}
+                  </div>
                 )}
               </>
             );

@@ -303,35 +303,49 @@ export default async function DashboardPage() {
                 Ver todos <ChevronRight size={14} />
               </Link>
             </div>
-            <div className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-1">
-              {events.map((e) => {
-                const [, m, d] = e.event_date.split("-").map(Number);
-                return (
-                  <Link key={e.id} href={`/dashboard/eventos/${e.id}`}
-                    className="ibau-tile w-52 flex-shrink-0 overflow-hidden rounded-2xl bg-neutral-900 shadow-[0_12px_28px_-14px_rgba(0,0,0,0.45)]">
-                    <div className="relative aspect-[16/10] w-full">
-                      {e.poster_url ? (
-                        <Image src={e.poster_url} alt={e.title} fill className="object-cover" />
-                      ) : (
-                        <div className="h-full w-full bg-gradient-to-br from-[#1c6b3c] to-[#0a2c18]" />
-                      )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-                      <span className="absolute left-3 top-3 flex h-11 w-11 flex-col items-center justify-center rounded-lg bg-white/95">
-                        <span className="text-sm font-black leading-none text-neutral-900">{d}</span>
-                        <span className="text-[9px] font-bold text-[#14532d]">{MONTHS_SHORT[m - 1]}</span>
+
+            <MediaCarousel
+              aspect="aspect-[16/10]"
+              slides={events
+                .filter((e) => e.poster_url)
+                .map((e) => {
+                  const [, m, d] = e.event_date.split("-").map(Number);
+                  return {
+                    id: e.id,
+                    image_url: e.poster_url as string,
+                    title: e.title,
+                    href: `/dashboard/eventos/${e.id}`,
+                    footnote: [
+                      e.start_time ? e.start_time.slice(0, 5) : null,
+                      e.location,
+                    ].filter(Boolean).join(" · ") || null,
+                    topLeft: (
+                      <span className="flex h-14 w-14 flex-col items-center justify-center rounded-xl bg-white/95 shadow-lg">
+                        <span className="text-lg font-black leading-none text-neutral-900">{d}</span>
+                        <span className="text-[10px] font-bold tracking-wide text-[#14532d]">
+                          {MONTHS_SHORT[m - 1]}
+                        </span>
                       </span>
-                      <span className={`absolute right-3 top-3 rounded-full px-2 py-0.5 text-[9px] font-bold ${
-                        e.is_free ? "bg-[#14532d] text-white" : "bg-[#f0a922] text-neutral-900"}`}>
-                        {e.is_free ? "GRÁTIS" : `R$ ${Number(e.price ?? 0).toFixed(0)}`}
+                    ),
+                    topRight: (
+                      <span
+                        className={`rounded-full px-3 py-1.5 text-[11px] font-bold tracking-wide shadow-lg ${
+                          e.is_free ? "bg-[#14532d] text-white" : "bg-[#f0a922] text-neutral-900"
+                        }`}
+                      >
+                        {e.is_free ? "GRATUITO" : `R$ ${Number(e.price ?? 0).toFixed(0)}`}
                       </span>
-                      <div className="absolute inset-x-0 bottom-0 p-3">
-                        <p className="line-clamp-2 text-sm font-bold leading-tight text-white">{e.title}</p>
-                      </div>
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
+                    ),
+                  };
+                })}
+              emptyState={
+                <div className="rounded-2xl border border-dashed border-neutral-200 px-4 py-8 text-center">
+                  <p className="text-sm text-neutral-400">
+                    Os próximos eventos aparecem aqui quando tiverem banner.
+                  </p>
+                </div>
+              }
+            />
           </section>
         )}
 
