@@ -723,6 +723,63 @@ export type Database = {
           },
         ]
       }
+      reflection_views: {
+        Row: { completed: boolean; profile_id: string; reflection_id: string; viewed_at: string }
+        Insert: { completed?: boolean; profile_id: string; reflection_id: string; viewed_at?: string }
+        Update: { completed?: boolean; profile_id?: string; reflection_id?: string; viewed_at?: string }
+        Relationships: []
+      }
+      reflections: {
+        Row: {
+          active: boolean
+          created_at: string
+          created_by: string | null
+          description: string | null
+          duration_max: number | null
+          duration_min: number | null
+          id: string
+          kind: Database["public"]["Enums"]["reflection_kind"]
+          published_at: string
+          speaker_name: string | null
+          thumbnail_url: string | null
+          title: string
+          verse_reference: string | null
+          video_url: string | null
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          duration_max?: number | null
+          duration_min?: number | null
+          id?: string
+          kind?: Database["public"]["Enums"]["reflection_kind"]
+          published_at?: string
+          speaker_name?: string | null
+          thumbnail_url?: string | null
+          title: string
+          verse_reference?: string | null
+          video_url?: string | null
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          duration_max?: number | null
+          duration_min?: number | null
+          id?: string
+          kind?: Database["public"]["Enums"]["reflection_kind"]
+          published_at?: string
+          speaker_name?: string | null
+          thumbnail_url?: string | null
+          title?: string
+          verse_reference?: string | null
+          video_url?: string | null
+        }
+        Relationships: []
+      }
       role_permissions: {
         Row: {
           permission_id: string
@@ -876,6 +933,7 @@ export type Database = {
       meeting_status: "a_realizar" | "registrada" | "nao_houve"
       meeting_team_role: "lider" | "co_lider" | "auxiliar"
       offering_type: "voluntaria" | "dizimo" | "oferta_especial"
+      reflection_kind: "leitura" | "oracao" | "reflexao"
       ticket_status: "pendente" | "confirmado" | "cancelado"
     }
     CompositeTypes: {
@@ -1008,6 +1066,7 @@ export const Constants = {
       meeting_status: ["a_realizar", "registrada", "nao_houve"],
       meeting_team_role: ["lider", "co_lider", "auxiliar"],
       offering_type: ["voluntaria", "dizimo", "oferta_especial"],
+      reflection_kind: ["leitura", "oracao", "reflexao"],
       ticket_status: ["pendente", "confirmado", "cancelado"],
     },
   },

@@ -3,7 +3,7 @@ import Image from "next/image";
 import {
   CalendarDays, Users2, Shield, ImagePlus, ChevronRight, Clock, Sparkles,
   CalendarClock, FileText, BookOpenText, Sunrise, NotebookPen, HandHeart,
-  MessagesSquare, Quote, MapPin, Ticket, Church, UserPlus,
+  MessagesSquare, MapPin, Ticket, Church, UserPlus, Video,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/bottom-nav";
@@ -11,7 +11,8 @@ import { MediaCarousel } from "@/components/media-carousel";
 import { TopBar } from "@/components/top-bar";
 import { WelcomeToast } from "@/components/welcome-toast";
 import { nextSaturday } from "@/lib/saturdays";
-import { verseOfTheDay } from "@/lib/daily-verse";
+import { VerseHero } from "@/components/verse-hero";
+import { ReflectionCard } from "@/components/reflection-card";
 
 const WEEKDAYS = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
 const MONTHS_SHORT = ["JAN","FEV","MAR","ABR","MAI","JUN","JUL","AGO","SET","OUT","NOV","DEZ"];
@@ -29,6 +30,7 @@ const DIARIO = [
   { href: "/dashboard/anotacoes", label: "Anotações", icon: NotebookPen },
   { href: "/dashboard/plano-oracao", label: "Plano de oração", icon: HandHeart },
   { href: "/dashboard/mural-oracoes", label: "Mural de orações", icon: MessagesSquare },
+  { href: "/dashboard/reflexoes", label: "Reflexões", icon: Video },
 ];
 
 function greeting() {
@@ -47,7 +49,7 @@ export default async function DashboardPage() {
   const [
     { data: profile }, { data: church }, { data: services }, { data: events },
     { data: banners }, { data: cells }, { data: currentStudy }, { data: devotional },
-    { data: myTickets }, { data: prayerCount },
+    { data: myTickets }, { data: prayerCount }, { data: reflections },
     { data: isDeveloper }, { data: canManageMembers }, { data: canManageChurch },
   ] = await Promise.all([
     supabase.from("profiles").select("full_name, roles(name)").eq("id", user!.id).single(),
@@ -68,6 +70,10 @@ export default async function DashboardPage() {
       .limit(1).maybeSingle(),
     supabase.from("event_tickets").select("id").neq("status", "cancelado"),
     supabase.from("prayer_requests").select("id").eq("answered", false),
+    supabase.from("reflections")
+      .select("id, kind, title, speaker_name, thumbnail_url, duration_min, duration_max")
+      .eq("active", true).lte("published_at", today)
+      .order("published_at", { ascending: false }).limit(3),
     supabase.rpc("is_developer"),
     supabase.rpc("has_permission", { p_key: "membros.manage" }),
     supabase.rpc("has_permission", { p_key: "igreja.manage" }),
@@ -77,7 +83,6 @@ export default async function DashboardPage() {
     ? profile?.roles[0]?.name
     : (profile?.roles as { name: string } | null)?.name;
   const firstName = profile?.full_name?.split(" ")[0] ?? "";
-  const verse = verseOfTheDay();
 
   const permMap: Record<string, boolean> = {
     dev: !!isDeveloper, membros: !!canManageMembers, igreja: !!canManageChurch,
@@ -149,20 +154,9 @@ export default async function DashboardPage() {
           }
         />
 
-        {/* Versículo do dia */}
-        <Link
-          href="/dashboard/biblia"
-          className="ibau-enter ibau-pressable mt-5 block overflow-hidden rounded-2xl bg-gradient-to-br from-[#123f26] to-[#0a2c18] p-5 shadow-[0_14px_34px_-16px_rgba(10,44,24,0.7)]"
-        >
-          <div className="mb-2 flex items-center justify-between">
-            <span className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-[#f0a922]">
-              <Quote size={12} /> Palavra do dia
-            </span>
-            <ChevronRight size={15} className="text-white/50" />
-          </div>
-          <p className="text-[15px] font-medium leading-relaxed text-white">{verse.text}</p>
-          <p className="mt-2 text-xs font-semibold text-white/60">{verse.reference}</p>
-        </Link>
+        <div className="mt-5">
+          <VerseHero />
+        </div>
 
         {/* Resumo rápido */}
         <section className="mt-4 grid grid-cols-3 gap-2.5">
@@ -269,6 +263,21 @@ export default async function DashboardPage() {
                 <ChevronRight size={17} className="flex-shrink-0 text-neutral-300" />
               </Link>
             )}
+          </section>
+        )}
+
+        {/* Reflexões */}
+        {reflections && reflections.length > 0 && (
+          <section className="mt-6 space-y-2.5">
+            {reflections.map((r) => (
+              <ReflectionCard key={r.id} item={r} />
+            ))}
+            <Link
+              href="/dashboard/reflexoes"
+              className="flex items-center justify-center gap-1 py-1 text-xs font-medium text-neutral-500"
+            >
+              Ver todas as reflexões <ChevronRight size={13} />
+            </Link>
           </section>
         )}
 
